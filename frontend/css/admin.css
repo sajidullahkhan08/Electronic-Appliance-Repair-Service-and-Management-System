@@ -1,0 +1,78 @@
+/* Admin Panel Layout */
+#admin-navbar {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#admin-navbar h1 {
+    font-size: 1.5rem;
+}
+
+#admin-navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+#admin-navbar a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+#admin-navbar a:hover {
+    color: #e74c3c;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-container h2 {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.login-container form {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+#stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.stat-card h3 {
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card .value {
+    font-size: 2rem;
+    color: #3498db;
+    font-weight: bold;
+}

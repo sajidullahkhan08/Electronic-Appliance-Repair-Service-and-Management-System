@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers - Admin Panel</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <nav id="admin-navbar">
+        <h1>Admin Panel</h1>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="requests.html">Requests</a></li>
+            <li><a href="customers.html">Customers</a></li>
+            <li><a href="home-services.html">Home Services</a></li>
+            <li><a href="#" id="logout">Logout</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h2>Customer Records</h2>
+        <table id="customers-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Customers will be populated here -->
+            </tbody>
+        </table>
+    </main>
+    <script src="../js/admin.js"></script>
+</body>
+</html>
