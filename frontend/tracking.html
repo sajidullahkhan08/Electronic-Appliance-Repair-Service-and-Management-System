@@ -1,30 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Track Repair - Appliance Repair</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Track Repair — ElectroFix Shangla</title>
+  <meta name="description" content="Track your appliance repair status using your tracking ID, name, or phone number. Real-time repair progress from ElectroFix Shangla."/>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <style>
+    .tab-btns { display:flex; gap:0; margin-bottom:24px; border-radius:var(--r-md); overflow:hidden; border:1px solid var(--border); }
+    .tab-btn { flex:1; padding:12px; background:var(--bg-card); border:none; color:var(--text-2); font-size:0.9rem; font-weight:600; cursor:pointer; transition:var(--t); font-family:inherit; }
+    .tab-btn.active { background:rgba(59,130,246,0.15); color:var(--blue-light); }
+    .tab-panel { display:none; } .tab-panel.active { display:block; }
+  </style>
 </head>
 <body>
-    <nav id="navbar">
-        <h1>Appliance Repair Service</h1>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="services.html">Services</a></li>
-            <li><a href="request.html">Request Repair</a></li>
-            <li><a href="tracking.html">Track Repair</a></li>
-            <li><a href="contact.html">Contact</a></li>
-        </ul>
-    </nav>
-    <main>
-        <h2>Track Your Repair</h2>
-        <form id="tracking-form">
-            <input type="text" placeholder="Enter Tracking ID" required>
-            <button type="submit">Track</button>
-        </form>
-        <div id="tracking-result"></div>
-    </main>
-    <script src="js/tracking.js"></script>
+<a class="wa-float" href="https://wa.me/923440025964" target="_blank">💬</a>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="/index.html" class="nav-logo"><div class="logo-icon">⚡</div>Electro<span>Fix</span></a>
+    <button class="nav-toggle">☰</button>
+    <ul class="nav-links">
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/services.html">Services</a></li>
+      <li><a href="/request.html">Request Repair</a></li>
+      <li><a href="/tracking.html" class="active">Track Repair</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <span class="section-label">Repair Tracking</span>
+  <h1 style="margin-top:10px;">Track Your Repair</h1>
+  <p style="color:var(--text-2);max-width:480px;margin:12px auto 0;">Check the current status of your appliance repair using your Tracking ID, name, or phone number.</p>
+</div>
+
+<section class="section" style="padding-top:50px;">
+  <div class="container" style="max-width:700px;">
+
+    <!-- Tab Switcher -->
+    <div class="tab-btns">
+      <button class="tab-btn active" onclick="switchTab('tab-id', this)">🔖 Track by ID</button>
+      <button class="tab-btn" onclick="switchTab('tab-contact', this)">📞 Search by Name / Phone</button>
+    </div>
+
+    <!-- Tab 1: Track by Tracking ID -->
+    <div id="tab-id" class="tab-panel active">
+      <form id="track-form" class="card" style="display:flex;gap:14px;padding:20px;align-items:flex-end;flex-wrap:wrap;">
+        <div class="form-group" style="flex:1;min-width:200px;margin:0;">
+          <label for="tracking-id-input">Tracking ID</label>
+          <input type="text" id="tracking-id-input" placeholder="e.g. EFX4K2Z1" style="text-transform:uppercase;letter-spacing:0.06em;font-weight:600;" maxlength="8"/>
+        </div>
+        <button type="submit" class="btn btn-primary" style="height:48px;padding:0 28px;">🔍 Track</button>
+      </form>
+    </div>
+
+    <!-- Tab 2: Search by Name / Phone -->
+    <div id="tab-contact" class="tab-panel">
+      <form id="contact-form" class="card" style="display:flex;gap:14px;padding:20px;align-items:flex-end;flex-wrap:wrap;">
+        <div class="form-group" style="flex:1;min-width:200px;margin:0;">
+          <label for="contact-input">Your Name or Phone Number</label>
+          <input type="text" id="contact-input" placeholder="e.g. Ahmad Khan  or  03001234567"/>
+        </div>
+        <button type="submit" class="btn btn-primary" style="height:48px;padding:0 28px;">🔍 Search</button>
+      </form>
+      <p style="font-size:0.82rem;color:var(--text-3);text-align:center;margin-top:8px;">Enter the name or phone you used when submitting your request.</p>
+    </div>
+
+    <!-- Loading / Results -->
+    <div id="track-loading" style="display:none;text-align:center;padding:20px;">
+      <div class="loader"></div>
+      <p style="color:var(--text-2);">Fetching repair status…</p>
+    </div>
+    <div id="track-result" style="margin-top:24px;"></div>
+
+    <!-- Status Guide -->
+    <div class="card" style="margin-top:32px;">
+      <h3 style="margin-bottom:16px;font-size:1rem;">Repair Status Guide</h3>
+
+      <p style="font-size:0.78rem;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Shop Repair</p>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+        <div style="display:flex;align-items:center;gap:12px;"><span class="status-badge status-pending">Pending</span><span style="font-size:0.85rem;color:var(--text-2);">Request received, awaiting inspection.</span></div>
+        <div style="display:flex;align-items:center;gap:12px;"><span class="status-badge status-under-inspection">Under Inspection</span><span style="font-size:0.85rem;color:var(--text-2);">Technician is diagnosing the appliance.</span></div>
+        <div style="display:flex;align-items:center;gap:12px;"><span class="status-badge status-repairing">Repairing</span><span style="font-size:0.85rem;color:var(--text-2);">Active repair work in progress.</span></div>
+        <div style="display:flex;align-items:center;gap:12px;"><span class="status-badge status-completed">Completed</span><span style="font-size:0.85rem;color:var(--text-2);">Repair completed successfully.</span></div>
+        <div style="display:flex;align-items:center;gap:12px;"><span class="status-badge status-ready">Ready for Pickup</span><span style="font-size:0.85rem;color:var(--text-2);">Your appliance is ready for collection at the shop.</span></div>
+      </div>
+
+      <hr style="border-color:var(--border);margin-bottom:16px;"/>
+
+      <p style="font-size:0.78rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Home Service</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:12px;"><span class="status-badge status-pending">Pending</span><span style="font-size:0.85rem;color:var(--text-2);">Request received, scheduling visit.</span></div>
+        <div style="display:flex;align-items:center;gap:12px;"><span class="status-badge" style="background:rgba(59,130,246,0.12);color:var(--blue-light);">Scheduled</span><span style="font-size:0.85rem;color:var(--text-2);">Visit date &amp; time has been confirmed.</span></div>
+        <div style="display:flex;align-items:center;gap:12px;"><span class="status-badge" style="background:rgba(139,92,246,0.12);color:var(--purple);">Technician Dispatched</span><span style="font-size:0.85rem;color:var(--text-2);">Technician is on the way to your home.</span></div>
+        <div style="display:flex;align-items:center;gap:12px;"><span class="status-badge status-repairing">Repairing</span><span style="font-size:0.85rem;color:var(--text-2);">Repair in progress at your location.</span></div>
+        <div style="display:flex;align-items:center;gap:12px;"><span class="status-badge status-completed">Completed</span><span style="font-size:0.85rem;color:var(--text-2);">Home service completed successfully.</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand"><div class="nav-logo" style="font-size:1.2rem;margin-bottom:10px;"><div class="logo-icon">⚡</div>Electro<span style="color:var(--blue-light);">Fix</span></div><p>Professional appliance repair services in Shangla, KPK.</p></div>
+    <div class="footer-col"><h4>Links</h4><ul><li><a href="/index.html">Home</a></li><li><a href="/request.html">Request Repair</a></li><li><a href="/tracking.html">Track Repair</a></li><li><a href="/contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:+923440025964">0344-0025964</a></li><li><a href="tel:+923260025964">0326-0025964</a></li><li><a href="tel:+923443771782">0344-3771782</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2024 ElectroFix. All rights reserved.</p><p>Besham Road, Koz Bazaar, Shangla, KPK</p></div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script src="/js/tracking.js"></script>
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('track-result').innerHTML = '';
+}
+</script>
 </body>
 </html>
