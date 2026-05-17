@@ -1,29 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Appliance Repair</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/admin.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — ElectroFix Admin</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link rel="stylesheet" href="/css/admin.css"/>
 </head>
-<body>
-    <nav id="admin-navbar">
-        <h1>Admin Panel</h1>
-        <ul>
-            <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="requests.html">Requests</a></li>
-            <li><a href="customers.html">Customers</a></li>
-            <li><a href="home-services.html">Home Services</a></li>
-            <li><a href="#" id="logout">Logout</a></li>
-        </ul>
-    </nav>
-    <main>
-        <h2>Dashboard</h2>
-        <div id="stats-overview">
-            <!-- Stats will be populated here -->
-        </div>
-    </main>
-    <script src="../js/admin.js"></script>
+<body class="admin-body">
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo-icon">⚡</div>
+    <div class="sidebar-title">Electro<span>Fix</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="/admin/dashboard.html" class="active"><span class="nav-icon">📊</span> Dashboard</a>
+    <a href="/admin/requests.html"><span class="nav-icon">🔧</span> Repair Requests</a>
+    <a href="/admin/customers.html"><span class="nav-icon">👥</span> Customers</a>
+    <a href="/admin/home-services.html"><span class="nav-icon">🏠</span> Home Services</a>
+  </nav>
+  <div class="sidebar-footer">
+    <a onclick="doLogout()">🚪 Logout</a>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="admin-main">
+  <div class="admin-topbar">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+      <div class="topbar-left"><h1>Dashboard</h1><p>Overview of repair operations</p></div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-badge">👤 <span id="admin-username">Admin</span></div>
+      <a href="/index.html" class="btn btn-outline" style="font-size:0.8rem;padding:7px 14px;">🌐 View Site</a>
+    </div>
+  </div>
+
+  <div class="admin-content">
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-header"><span class="stat-label">Total Requests</span><div class="stat-icon blue">🔧</div></div>
+        <div class="stat-value" id="stat-total">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span class="stat-label">Pending</span><div class="stat-icon gold">⏳</div></div>
+        <div class="stat-value" id="stat-pending">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span class="stat-label">In Progress</span><div class="stat-icon blue">⚙️</div></div>
+        <div class="stat-value" id="stat-progress">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span class="stat-label">Completed</span><div class="stat-icon green">✅</div></div>
+        <div class="stat-value" id="stat-completed">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span class="stat-label">Home Services</span><div class="stat-icon purple">🏠</div></div>
+        <div class="stat-value" id="stat-home">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span class="stat-label">Customers</span><div class="stat-icon orange">👥</div></div>
+        <div class="stat-value" id="stat-customers">—</div>
+      </div>
+    </div>
+
+    <!-- Recent Requests Table -->
+    <div class="table-wrapper">
+      <div class="table-header">
+        <h3>Recent Repair Requests</h3>
+        <a href="/admin/requests.html" class="btn btn-outline" style="font-size:0.82rem;padding:8px 16px;">View All →</a>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Tracking ID</th><th>Customer</th><th>Appliance</th><th>Service</th><th>Status</th><th>Date</th>
+        </tr></thead>
+        <tbody id="recent-tbody">
+          <tr><td colspan="6" class="empty-state"><div class="empty-icon">⏳</div>Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="/js/admin.js"></script>
+<script>
+(async () => {
+  await requireAuth();
+  await loadStats();
+
+  const rows = await loadRequests();
+  const tbody = document.getElementById('recent-tbody');
+  const recent = rows.slice(0, 10);
+  if (!recent.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><div class="empty-icon">📋</div>No requests yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = recent.map(r => `
+    <tr>
+      <td class="td-tracking">${r.tracking_id}</td>
+      <td>${r.customer_name}</td>
+      <td>${r.appliance_type}</td>
+      <td>${r.service_type}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${r.request_date}</td>
+    </tr>`).join('');
+})();
+</script>
 </body>
 </html>

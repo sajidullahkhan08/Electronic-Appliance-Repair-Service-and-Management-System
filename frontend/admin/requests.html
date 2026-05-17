@@ -1,39 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Requests - Admin Panel</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/admin.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Repair Requests — ElectroFix Admin</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link rel="stylesheet" href="/css/admin.css"/>
 </head>
-<body>
-    <nav id="admin-navbar">
-        <h1>Admin Panel</h1>
-        <ul>
-            <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="requests.html">Requests</a></li>
-            <li><a href="customers.html">Customers</a></li>
-            <li><a href="home-services.html">Home Services</a></li>
-            <li><a href="#" id="logout">Logout</a></li>
-        </ul>
-    </nav>
-    <main>
-        <h2>All Repair Requests</h2>
-        <table id="requests-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Customer</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Requests will be populated here -->
-            </tbody>
-        </table>
-    </main>
-    <script src="../js/admin.js"></script>
+<body class="admin-body">
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header"><div class="sidebar-logo-icon">⚡</div><div class="sidebar-title">Electro<span>Fix</span></div></div>
+  <nav class="sidebar-nav">
+    <a href="/admin/dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+    <a href="/admin/requests.html" class="active"><span class="nav-icon">🔧</span> Repair Requests</a>
+    <a href="/admin/customers.html"><span class="nav-icon">👥</span> Customers</a>
+    <a href="/admin/home-services.html"><span class="nav-icon">🏠</span> Home Services</a>
+  </nav>
+  <div class="sidebar-footer"><a onclick="doLogout()">🚪 Logout</a></div>
+</aside>
+
+<div class="admin-main">
+  <div class="admin-topbar">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+      <div class="topbar-left"><h1>Repair Requests</h1><p>Manage all customer repair requests</p></div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-badge">👤 <span id="admin-username">Admin</span></div>
+    </div>
+  </div>
+
+  <div class="admin-content">
+    <div class="table-wrapper">
+      <div class="table-header">
+        <h3>All Repair Requests</h3>
+        <input type="text" class="search-input" id="search-requests" placeholder="🔍 Search requests…"/>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Tracking ID</th><th>Customer</th><th>Phone</th><th>Appliance</th><th>Brand</th>
+          <th>Service</th><th>Status</th><th>Date</th><th>Actions</th>
+        </tr></thead>
+        <tbody id="requests-tbody">
+          <tr><td colspan="9" class="empty-state"><div class="loader" style="margin:20px auto;"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Detail / Update Modal -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal" style="max-width:560px;text-align:left;">
+    <h2 style="margin-bottom:4px;">Request Details</h2>
+    <p style="margin-bottom:0;" id="modal-tracking-lbl"></p>
+    <div class="detail-grid" id="modal-detail-grid"></div>
+    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px;margin-bottom:16px;" id="modal-problem-box"></div>
+    <div style="margin-bottom:20px;">
+      <label style="font-size:0.8rem;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:8px;">Update Status</label>
+      <select id="modal-status-select" class="status-select" style="width:100%;padding:10px;font-size:0.9rem;">
+        <option>Pending</option>
+        <option>Under Inspection</option>
+        <option>Repairing</option>
+        <option>Completed</option>
+        <option>Ready for Pickup</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:18px;">
+      <label for="modal-notes" style="font-size:0.8rem;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.1em;">Technician Notes</label>
+      <textarea id="modal-notes" rows="3" placeholder="Optional notes for the customer…" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text-1);padding:10px 14px;font-family:inherit;width:100%;resize:vertical;"></textarea>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="document.getElementById('detail-modal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" id="save-status-btn">💾 Save Status</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/admin.js"></script>
+<script>
+let currentRequestId = null;
+
+(async () => {
+  await requireAuth();
+  await renderRequests();
+  filterTable('search-requests', 'requests-tbody');
+})();
+
+async function renderRequests() {
+  const rows  = await loadRequests();
+  const tbody = document.getElementById('requests-tbody');
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="9" class="empty-state"><div class="empty-icon">📋</div>No repair requests yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="td-tracking">${r.tracking_id}</td>
+      <td>${r.customer_name}</td>
+      <td><a href="tel:${r.phone}" style="color:var(--blue-light);">${r.phone}</a></td>
+      <td>${r.appliance_type}</td>
+      <td>${r.appliance_brand || '—'}</td>
+      <td>${r.service_type}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td style="white-space:nowrap;">${r.request_date}</td>
+      <td class="td-actions">
+        <button class="btn-sm btn-sm-blue" onclick="openDetail(${r.request_id})">✏️ Update</button>
+      </td>
+    </tr>`).join('');
+}
+
+const SHOP_STATUSES = ['Pending', 'Under Inspection', 'Repairing', 'Completed', 'Ready for Pickup'];
+const HOME_STATUSES = ['Pending', 'Scheduled', 'Technician Dispatched', 'Repairing', 'Completed'];
+
+async function openDetail(id) {
+  currentRequestId = id;
+  const res  = await fetch(`/api/admin/requests/${id}`, {credentials:'include'});
+  const json = await res.json();
+  if (!json.success) return;
+  const d = json.data;
+
+  document.getElementById('modal-tracking-lbl').innerHTML = `<span class="td-tracking">${d.tracking_id}</span> — ${d.request_date}`;
+  document.getElementById('modal-detail-grid').innerHTML = `
+    <div class="detail-item"><label>Customer</label><span>${d.customer_name}</span></div>
+    <div class="detail-item"><label>Phone</label><span>${d.phone}</span></div>
+    <div class="detail-item"><label>Appliance</label><span>${d.appliance_type}</span></div>
+    <div class="detail-item"><label>Brand</label><span>${d.appliance_brand || '—'}</span></div>
+    <div class="detail-item"><label>Service Type</label><span>${d.service_type}</span></div>
+    <div class="detail-item"><label>Address</label><span>${d.address || '—'}</span></div>`;
+  document.getElementById('modal-problem-box').innerHTML = `
+    <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-2);margin-bottom:6px;">Problem Description</p>
+    <p style="color:var(--text-1);">${d.problem_description}</p>`;
+
+  // Populate status options based on service type
+  const statuses = d.service_type === 'Home Service' ? HOME_STATUSES : SHOP_STATUSES;
+  const sel = document.getElementById('modal-status-select');
+  sel.innerHTML = statuses.map(s => `<option value="${s}"${s === d.status ? ' selected' : ''}>${s}</option>`).join('');
+
+  document.getElementById('modal-notes').value = d.notes || '';
+  document.getElementById('detail-modal').classList.add('show');
+}
+
+document.getElementById('save-status-btn').addEventListener('click', async () => {
+  const status = document.getElementById('modal-status-select').value;
+  const notes  = document.getElementById('modal-notes').value;
+  const ok = await updateStatus(currentRequestId, status, notes);
+  if (ok) {
+    document.getElementById('detail-modal').classList.remove('show');
+    await renderRequests();
+    window.showToast('Updated!', 'Repair status has been updated.', 'success');
+  } else {
+    window.showToast('Error', 'Could not update status.', 'error');
+  }
+});
+
+document.getElementById('detail-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('detail-modal')) document.getElementById('detail-modal').classList.remove('show');
+});
+</script>
 </body>
 </html>
