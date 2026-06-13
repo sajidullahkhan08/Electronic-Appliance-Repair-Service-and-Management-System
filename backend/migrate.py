@@ -4,20 +4,16 @@ so it can hold both Shop Repair and Home Service specific statuses.
 Usage: python migrate.py
 """
 
-import pymysql
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from config import Config
+from db import get_db
 
 
 def migrate():
-    conn = pymysql.connect(
-        host=Config.MYSQL_HOST,
-        port=Config.MYSQL_PORT,
-        user=Config.MYSQL_USER,
-        password=Config.MYSQL_PASSWORD,
-        database=Config.MYSQL_DB,
-        charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
-    )
+    conn = get_db()
     with conn.cursor() as cur:
         cur.execute("""
             ALTER TABLE repair_requests

@@ -4,7 +4,7 @@ routes/admin_routes.py — Admin-only API endpoints (session-protected).
 
 from flask import Blueprint, request, jsonify, session
 from routes.auth import admin_required
-from models.admin import verify_admin
+from models.admin import verify_admin, update_admin_password
 from models.repair_request import (
     get_all_requests, get_request_by_id, update_status, get_dashboard_stats,
     ALL_VALID_STATUSES, SHOP_STATUSES, HOME_STATUSES
@@ -168,3 +168,30 @@ def status_options():
     stype = request.args.get('service_type', 'Shop Repair')
     statuses = HOME_STATUSES if stype == 'Home Service' else SHOP_STATUSES
     return jsonify({'success': True, 'statuses': statuses}), 200
+
+
+# ── Password Change ───────────────────────────────────────────────────────────
+
+@admin_bp.route('/change-password', methods=['PUT'])
+@admin_required
+def change_password():
+    """Allow the logged-in admin to set a new password."""
+    data = request.get_json()
+    new_password    = data.get('new_password', '').strip()
+    confirm_password = data.get('confirm_password', '').strip()
+
+    if not new_password:
+        return jsonify({'success': False, 'error': 'New password cannot be empty.'}), 400
+
+    if len(new_password) < 6:
+        return jsonify({'success': False, 'error': 'Password must be at least 6 characters.'}), 400
+
+    if new_password != confirm_password:
+        return jsonify({'success': False, 'error': 'Passwords do not match.'}), 400
+
+    admin_id = session.get('admin_id')
+    ok = update_admin_password(admin_id, new_password)
+
+    if ok:
+        return jsonify({'success': True, 'message': 'Password updated successfully.'}), 200
+    return jsonify({'success': False, 'error': 'Failed to update password.'}), 500

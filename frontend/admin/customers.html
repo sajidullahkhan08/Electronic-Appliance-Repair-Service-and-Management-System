@@ -1,107 +1,196 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Customers — ElectroFix Admin</title>
-  <link rel="stylesheet" href="/css/style.css"/>
-  <link rel="stylesheet" href="/css/admin.css"/>
-</head>
-<body class="admin-body">
-
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header"><div class="sidebar-logo-icon">⚡</div><div class="sidebar-title">Electro<span>Fix</span></div></div>
-  <nav class="sidebar-nav">
-    <a href="/admin/dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
-    <a href="/admin/requests.html"><span class="nav-icon">🔧</span> Repair Requests</a>
-    <a href="/admin/customers.html" class="active"><span class="nav-icon">👥</span> Customers</a>
-    <a href="/admin/home-services.html"><span class="nav-icon">🏠</span> Home Services</a>
-  </nav>
-  <div class="sidebar-footer"><a onclick="doLogout()">🚪 Logout</a></div>
-</aside>
-
-<div class="admin-main">
-  <div class="admin-topbar">
-    <div style="display:flex;align-items:center;gap:14px;">
-      <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
-      <div class="topbar-left"><h1>Customers</h1><p>All registered customers</p></div>
-    </div>
-    <div class="topbar-right"><div class="topbar-badge">👤 <span id="admin-username">Admin</span></div></div>
-  </div>
-
-  <div class="admin-content">
-    <div class="table-wrapper">
-      <div class="table-header">
-        <h3>Customer Records</h3>
-        <input type="text" class="search-input" id="search-customers" placeholder="Search by name or phone…"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customers — ElectroFix Admin</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/admin.css" />
+  </head>
+  <body class="admin-body">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon">⚡</div>
+        <div class="sidebar-title">Electro<span>Fix</span></div>
       </div>
-      <div id="table-area">
-        <div class="empty-state"><div class="loader" style="margin:20px auto;width:32px;height:32px;border-width:2px;"></div></div>
+      <nav class="sidebar-nav">
+        <a href="/admin/dashboard.html"
+          ><span class="nav-icon">📊</span> Dashboard</a
+        >
+        <a href="/admin/requests.html"
+          ><span class="nav-icon">🔧</span> Repair Requests</a
+        >
+        <a href="/admin/customers.html" class="active"
+          ><span class="nav-icon">👥</span> Customers</a
+        >
+        <a href="/admin/home-services.html"
+          ><span class="nav-icon">🏠</span> Home Services</a
+        >
+        <a href="/admin/settings.html"
+          ><span class="nav-icon">⚙️</span> Settings</a
+        >
+      </nav>
+      <div class="sidebar-footer"><a onclick="doLogout()">🚪 Logout</a></div>
+    </aside>
+
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <div style="display: flex; align-items: center; gap: 14px">
+          <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+          <div class="topbar-left">
+            <h1>Customers</h1>
+            <p>All registered customers</p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-badge">
+            👤 <span id="admin-username">Admin</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-content">
+        <div class="table-wrapper">
+          <div class="table-header">
+            <h3>Customer Records</h3>
+            <input
+              type="text"
+              class="search-input"
+              id="search-customers"
+              placeholder="Search by name or phone…"
+            />
+          </div>
+          <div id="table-area">
+            <div class="empty-state">
+              <div
+                class="loader"
+                style="
+                  margin: 20px auto;
+                  width: 32px;
+                  height: 32px;
+                  border-width: 2px;
+                "
+              ></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- Customer History Modal -->
-<div class="modal-overlay" id="history-modal">
-  <div class="modal" style="max-width:620px;text-align:left;max-height:85vh;overflow-y:auto;">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;">
-      <div>
-        <h2 id="history-name" style="margin-bottom:2px;">Customer</h2>
-        <p id="history-phone" style="font-size:0.88rem;"></p>
+    <!-- Customer History Modal -->
+    <div class="modal-overlay" id="history-modal">
+      <div
+        class="modal"
+        style="
+          max-width: 620px;
+          text-align: left;
+          max-height: 85vh;
+          overflow-y: auto;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+          "
+        >
+          <div>
+            <h2 id="history-name" style="margin-bottom: 2px">Customer</h2>
+            <p id="history-phone" style="font-size: 0.88rem"></p>
+          </div>
+          <button
+            class="btn btn-outline"
+            style="padding: 7px 14px; font-size: 0.82rem"
+            onclick="
+              document.getElementById('history-modal').classList.remove('show')
+            "
+          >
+            ✕ Close
+          </button>
+        </div>
+        <div
+          id="history-address"
+          style="
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 18px;
+            font-size: 0.88rem;
+            color: var(--text-2);
+          "
+        ></div>
+        <h4
+          style="
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-2);
+            margin-bottom: 14px;
+          "
+        >
+          Repair History
+        </h4>
+        <div id="history-content"></div>
       </div>
-      <button class="btn btn-outline" style="padding:7px 14px;font-size:0.82rem;" onclick="document.getElementById('history-modal').classList.remove('show')">✕ Close</button>
     </div>
-    <div id="history-address" style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px;margin-bottom:18px;font-size:0.88rem;color:var(--text-2);"></div>
-    <h4 style="font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-2);margin-bottom:14px;">Repair History</h4>
-    <div id="history-content"></div>
-  </div>
-</div>
 
-<script src="/js/admin.js"></script>
-<script>
-let allCustomers = [];
+    <script src="/js/config.js"></script>
+    <script src="/js/admin.js"></script>
+    <script>
+      let allCustomers = [];
 
-(async () => {
-  await requireAuth();
-  try {
-    const res  = await fetch('/api/admin/customers', {credentials:'include'});
-    const json = await res.json();
-    if (!json.success) throw new Error(json.error);
-    allCustomers = json.data;
-    renderTable(allCustomers);
+      (async () => {
+        await requireAuth();
+        try {
+          const res = await fetch(
+            `${window.apiUrl ? window.apiUrl("/admin/customers") : "/api/admin/customers"}`,
+            { credentials: "include" },
+          );
+          const json = await res.json();
+          if (!json.success) throw new Error(json.error);
+          allCustomers = json.data;
+          renderTable(allCustomers);
 
-    // Live search
-    document.getElementById('search-customers').addEventListener('input', function() {
-      const q = this.value.toLowerCase();
-      const filtered = allCustomers.filter(c =>
-        c.name.toLowerCase().includes(q) || c.phone.includes(q)
-      );
-      renderTable(filtered);
-    });
-  } catch(err) {
-    document.getElementById('table-area').innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div>Failed to load customers: ${err.message}</div>`;
-  }
-})();
+          // Live search
+          document
+            .getElementById("search-customers")
+            .addEventListener("input", function () {
+              const q = this.value.toLowerCase();
+              const filtered = allCustomers.filter(
+                (c) => c.name.toLowerCase().includes(q) || c.phone.includes(q),
+              );
+              renderTable(filtered);
+            });
+        } catch (err) {
+          document.getElementById("table-area").innerHTML =
+            `<div class="empty-state"><div class="empty-icon">⚠️</div>Failed to load customers: ${err.message}</div>`;
+        }
+      })();
 
-function renderTable(rows) {
-  if (!rows.length) {
-    document.getElementById('table-area').innerHTML = `<div class="empty-state"><div class="empty-icon">👥</div>No customers found.</div>`;
-    return;
-  }
-  document.getElementById('table-area').innerHTML = `
+      function renderTable(rows) {
+        if (!rows.length) {
+          document.getElementById("table-area").innerHTML =
+            `<div class="empty-state"><div class="empty-icon">👥</div>No customers found.</div>`;
+          return;
+        }
+        document.getElementById("table-area").innerHTML = `
     <table>
       <thead><tr>
         <th>#</th><th>Name</th><th>Phone</th><th>Address</th>
         <th style="text-align:center;">Total Requests</th><th>Joined</th><th>Actions</th>
       </tr></thead>
       <tbody>
-        ${rows.map((c, i) => `
+        ${rows
+          .map(
+            (c, i) => `
           <tr>
             <td style="color:var(--text-3);">${i + 1}</td>
             <td><strong>${escHtml(c.name)}</strong></td>
             <td><a href="tel:${escHtml(c.phone)}" style="color:var(--blue-light);">${escHtml(c.phone)}</a></td>
-            <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(c.address || '—')}</td>
+            <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(c.address || "—")}</td>
             <td style="text-align:center;">
               <span style="background:rgba(59,130,246,0.12);color:var(--blue-light);padding:2px 10px;border-radius:50px;font-size:0.82rem;font-weight:700;">${c.total_requests}</span>
             </td>
@@ -109,52 +198,74 @@ function renderTable(rows) {
             <td>
               <button class="btn-sm btn-sm-blue" onclick="viewHistory(${c.customer_id})">📋 History</button>
             </td>
-          </tr>`).join('')}
+          </tr>`,
+          )
+          .join("")}
       </tbody>
     </table>`;
-}
+      }
 
-async function viewHistory(id) {
-  const customer = allCustomers.find(c => c.customer_id === id);
-  if (customer) {
-    document.getElementById('history-name').textContent  = customer.name;
-    document.getElementById('history-phone').textContent = customer.phone;
-    document.getElementById('history-address').textContent = customer.address ? 'Address: ' + customer.address : 'No address on file.';
-  }
-  document.getElementById('history-content').innerHTML = '<div class="loader" style="margin:20px auto;width:28px;height:28px;border-width:2px;"></div>';
-  document.getElementById('history-modal').classList.add('show');
+      async function viewHistory(id) {
+        const customer = allCustomers.find((c) => c.customer_id === id);
+        if (customer) {
+          document.getElementById("history-name").textContent = customer.name;
+          document.getElementById("history-phone").textContent = customer.phone;
+          document.getElementById("history-address").textContent =
+            customer.address
+              ? "Address: " + customer.address
+              : "No address on file.";
+        }
+        document.getElementById("history-content").innerHTML =
+          '<div class="loader" style="margin:20px auto;width:28px;height:28px;border-width:2px;"></div>';
+        document.getElementById("history-modal").classList.add("show");
 
-  try {
-    const res  = await fetch(`/api/admin/customers/${id}`, {credentials:'include'});
-    const json = await res.json();
+        try {
+          const res = await fetch(
+            `${window.apiUrl ? window.apiUrl(`/admin/customers/${id}`) : `/api/admin/customers/${id}`}`,
+            { credentials: "include" },
+          );
+          const json = await res.json();
 
-    if (!json.success || !json.history.length) {
-      document.getElementById('history-content').innerHTML = '<p style="color:var(--text-2);text-align:center;padding:20px;">No repair history found.</p>';
-      return;
-    }
+          if (!json.success || !json.history.length) {
+            document.getElementById("history-content").innerHTML =
+              '<p style="color:var(--text-2);text-align:center;padding:20px;">No repair history found.</p>';
+            return;
+          }
 
-    document.getElementById('history-content').innerHTML = json.history.map(h => `
+          document.getElementById("history-content").innerHTML = json.history
+            .map(
+              (h) => `
       <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
           <span class="td-tracking">${escHtml(h.tracking_id)}</span>
           ${statusBadge(h.status)}
         </div>
-        <p style="font-size:0.88rem;margin:0;"><strong>${escHtml(h.appliance_type)}</strong>${h.appliance_brand ? ' — ' + escHtml(h.appliance_brand) : ''}</p>
+        <p style="font-size:0.88rem;margin:0;"><strong>${escHtml(h.appliance_type)}</strong>${h.appliance_brand ? " — " + escHtml(h.appliance_brand) : ""}</p>
         <p style="font-size:0.82rem;color:var(--text-2);margin:4px 0 0;">${escHtml(h.service_type)} · ${h.request_date}</p>
-      </div>`).join('');
-  } catch {
-    document.getElementById('history-content').innerHTML = '<p style="color:var(--red);text-align:center;">Failed to load history.</p>';
-  }
-}
+      </div>`,
+            )
+            .join("");
+        } catch {
+          document.getElementById("history-content").innerHTML =
+            '<p style="color:var(--red);text-align:center;">Failed to load history.</p>';
+        }
+      }
 
-function escHtml(str) {
-  if (!str) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+      function escHtml(str) {
+        if (!str) return "";
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
 
-document.getElementById('history-modal').addEventListener('click', e => {
-  if (e.target === document.getElementById('history-modal')) document.getElementById('history-modal').classList.remove('show');
-});
-</script>
-</body>
+      document
+        .getElementById("history-modal")
+        .addEventListener("click", (e) => {
+          if (e.target === document.getElementById("history-modal"))
+            document.getElementById("history-modal").classList.remove("show");
+        });
+    </script>
+  </body>
 </html>

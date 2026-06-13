@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings — ElectroFix Admin</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/admin.css" />
+  </head>
+  <body class="admin-body">
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon">⚡</div>
+        <div class="sidebar-title">Electro<span>Fix</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/admin/dashboard.html"
+          ><span class="nav-icon">📊</span> Dashboard</a
+        >
+        <a href="/admin/requests.html"
+          ><span class="nav-icon">🔧</span> Repair Requests</a
+        >
+        <a href="/admin/customers.html"
+          ><span class="nav-icon">👥</span> Customers</a
+        >
+        <a href="/admin/home-services.html"
+          ><span class="nav-icon">🏠</span> Home Services</a
+        >
+        <a href="/admin/settings.html" class="active"
+          ><span class="nav-icon">⚙️</span> Settings</a
+        >
+      </nav>
+      <div class="sidebar-footer"><a onclick="doLogout()">🚪 Logout</a></div>
+    </aside>
+
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <div style="display: flex; align-items: center; gap: 14px">
+          <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+          <div class="topbar-left">
+            <h1>Settings</h1>
+            <p>Manage your admin account</p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-badge">👤 <span id="admin-username">Admin</span></div>
+        </div>
+      </div>
+
+      <div class="admin-content">
+        <div style="max-width: 500px;">
+
+          <!-- Change Password Card -->
+          <div class="card" style="padding: 32px;">
+            <h2 style="margin-bottom: 6px; font-size: 1.2rem;">🔐 Change Password</h2>
+            <p style="color: var(--text-2); font-size: 0.88rem; margin-bottom: 28px;">
+              Enter a new password below. It must be at least 6 characters long.
+            </p>
+
+            <div
+              id="pw-error"
+              style="
+                display: none;
+                background: rgba(239,68,68,0.1);
+                border: 1px solid rgba(239,68,68,0.3);
+                border-radius: 8px;
+                padding: 10px 14px;
+                font-size: 0.85rem;
+                color: var(--red);
+                margin-bottom: 18px;
+              "
+            ></div>
+
+            <div
+              id="pw-success"
+              style="
+                display: none;
+                background: rgba(16,185,129,0.1);
+                border: 1px solid rgba(16,185,129,0.3);
+                border-radius: 8px;
+                padding: 10px 14px;
+                font-size: 0.85rem;
+                color: var(--green);
+                margin-bottom: 18px;
+              "
+            ></div>
+
+            <form id="pw-form" style="display: flex; flex-direction: column; gap: 18px;">
+              <div class="form-group">
+                <label for="new-password">New Password</label>
+                <input
+                  type="password"
+                  id="new-password"
+                  placeholder="Minimum 6 characters"
+                  autocomplete="new-password"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="confirm-password">Confirm New Password</label>
+                <input
+                  type="password"
+                  id="confirm-password"
+                  placeholder="Re-enter new password"
+                  autocomplete="new-password"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                id="pw-btn"
+                class="btn btn-primary"
+                style="width: 100%; justify-content: center; padding: 14px;"
+              >
+                🔒 Update Password
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/config.js"></script>
+    <script src="/js/admin.js"></script>
+    <script>
+      (async () => {
+        await requireAuth();
+      })();
+
+      document.getElementById('pw-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const errEl  = document.getElementById('pw-error');
+        const okEl   = document.getElementById('pw-success');
+        const btn    = document.getElementById('pw-btn');
+        const newPw  = document.getElementById('new-password').value;
+        const confPw = document.getElementById('confirm-password').value;
+
+        // Hide previous messages
+        errEl.style.display = 'none';
+        okEl.style.display  = 'none';
+
+        // Client-side validation
+        if (newPw.length < 6) {
+          errEl.textContent = 'Password must be at least 6 characters.';
+          errEl.style.display = 'block';
+          return;
+        }
+        if (newPw !== confPw) {
+          errEl.textContent = 'Passwords do not match.';
+          errEl.style.display = 'block';
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Updating…';
+
+        const result = await changePassword(newPw, confPw);
+
+        btn.disabled = false;
+        btn.textContent = '🔒 Update Password';
+
+        if (result.success) {
+          okEl.textContent = 'Password updated successfully!';
+          okEl.style.display = 'block';
+          document.getElementById('pw-form').reset();
+        } else {
+          errEl.textContent = result.error || 'Failed to update password.';
+          errEl.style.display = 'block';
+        }
+      });
+    </script>
+  </body>
+</html>

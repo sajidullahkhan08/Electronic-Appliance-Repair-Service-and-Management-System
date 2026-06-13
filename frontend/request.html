@@ -1,126 +1,258 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Request Repair — ElectroFix Shangla</title>
-  <meta name="description" content="Submit your appliance repair request online. Get a tracking ID instantly. Home service or shop repair available in Shangla."/>
-  <link rel="stylesheet" href="/css/style.css"/>
-</head>
-<body>
-<a class="wa-float" href="https://wa.me/923440025964" target="_blank">💬</a>
-<nav class="navbar">
-  <div class="nav-inner">
-    <a href="/index.html" class="nav-logo"><div class="logo-icon">⚡</div>Electro<span>Fix</span></a>
-    <button class="nav-toggle">☰</button>
-    <ul class="nav-links">
-      <li><a href="/index.html">Home</a></li>
-      <li><a href="/services.html">Services</a></li>
-      <li><a href="/request.html" class="active">Request Repair</a></li>
-      <li><a href="/tracking.html">Track Repair</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-
-    </ul>
-  </div>
-</nav>
-
-<div class="page-hero">
-  <span class="section-label">Submit a Request</span>
-  <h1 style="margin-top:10px;">Request Appliance Repair</h1>
-  <p style="color:var(--text-2);max-width:500px;margin:12px auto 0;">Fill in the form below. You'll receive a tracking ID to monitor your repair progress.</p>
-</div>
-
-<section class="section" style="padding-top:50px;">
-  <div class="container" style="max-width:760px;">
-    <form id="request-form" class="card" style="display:flex;flex-direction:column;gap:22px;padding:36px;">
-
-      <h3 style="font-size:1.1rem;color:var(--blue-light);padding-bottom:14px;border-bottom:1px solid var(--border);">👤 Customer Information</h3>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="name">Full Name *</label>
-          <input type="text" id="name" name="name" placeholder="e.g. Ahmad Khan" required/>
-          <span class="form-error" id="err-name"></span>
-        </div>
-        <div class="form-group">
-          <label for="phone">Phone Number *</label>
-          <input type="tel" id="phone" name="phone" placeholder="e.g. 03001234567" required/>
-          <span class="form-error" id="err-phone"></span>
-        </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Request Repair — ElectroFix Shangla</title>
+    <meta
+      name="description"
+      content="Submit your appliance repair request online. Get a tracking ID instantly. Home service or shop repair available in Shangla."
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <a class="wa-float" href="https://wa.me/923440025964" target="_blank">💬</a>
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="/index.html" class="nav-logo"
+          ><div class="logo-icon">⚡</div>
+          Electro<span>Fix</span></a
+        >
+        <button class="nav-toggle">☰</button>
+        <ul class="nav-links">
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/services.html">Services</a></li>
+          <li><a href="/request.html" class="active">Request Repair</a></li>
+          <li><a href="/tracking.html">Track Repair</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+        </ul>
       </div>
+    </nav>
 
-      <div class="form-group" id="address-row" style="display:none;">
-        <label for="address">Home Address *</label>
-        <input type="text" id="address" name="address" placeholder="Your full address for home visit"/>
-        <span class="form-error" id="err-address"></span>
-      </div>
-
-      <h3 style="font-size:1.1rem;color:var(--blue-light);padding-bottom:14px;border-bottom:1px solid var(--border);margin-top:4px;">🔧 Appliance Details</h3>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="appliance_type">Appliance Type *</label>
-          <select id="appliance_type" name="appliance_type" required>
-            <option value="">-- Select Appliance --</option>
-            <option>Washing Machine</option>
-            <option>Freezer</option>
-            <option>Refrigerator</option>
-            <option>Stabilizer</option>
-            <option>Electric Iron</option>
-            <option>Water Dispenser</option>
-            <option>Fan</option>
-            <option>Microwave Oven</option>
-            <option>Other</option>
-          </select>
-          <span class="form-error" id="err-appliance"></span>
-        </div>
-        <div class="form-group">
-          <label for="appliance_brand">Brand / Model</label>
-          <input type="text" id="appliance_brand" name="appliance_brand" placeholder="e.g. Haier, Dawlance, Orient"/>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="problem_description">Problem Description *</label>
-        <textarea id="problem_description" name="problem_description" rows="4" placeholder="Describe the issue clearly e.g. 'Machine not spinning, makes loud noise when starting...'" required></textarea>
-        <span class="form-error" id="err-problem"></span>
-      </div>
-
-      <h3 style="font-size:1.1rem;color:var(--blue-light);padding-bottom:14px;border-bottom:1px solid var(--border);margin-top:4px;">🏠 Service Type *</h3>
-
-      <div class="service-type-group">
-        <div class="service-type-card">
-          <input type="radio" id="stype-shop" name="service_type" value="Shop Repair" checked/>
-          <label for="stype-shop"><span class="stype-icon">🏪</span><div><strong>Shop Repair</strong><br/><small style="color:var(--text-2);font-weight:400;">Bring appliance to our shop</small></div></label>
-        </div>
-        <div class="service-type-card">
-          <input type="radio" id="stype-home" name="service_type" value="Home Service"/>
-          <label for="stype-home"><span class="stype-icon">🏠</span><div><strong>Home Service</strong><br/><small style="color:var(--text-2);font-weight:400;">Technician visits your home</small></div></label>
-        </div>
-      </div>
-      <span class="form-error" id="err-service"></span>
-
-      <button type="submit" id="submit-btn" class="btn btn-primary" style="width:100%;justify-content:center;padding:15px;">🔧 Submit Repair Request</button>
-    </form>
-  </div>
-</section>
-
-<!-- Success Modal -->
-<div class="modal-overlay" id="success-modal">
-  <div class="modal">
-    <div class="modal-icon">✅</div>
-    <h2>Request Submitted!</h2>
-    <p>Your repair request has been received. Save your <strong>Tracking ID</strong> below to monitor progress:</p>
-    <div class="tracking-id-display" id="tracking-id-value" title="Click to copy"></div>
-    <p style="font-size:0.82rem;color:var(--text-2);margin-bottom:20px;">Click the ID above to copy it. Use this ID on the <a href="/tracking.html" style="color:var(--blue-light);">Track Repair</a> page.</p>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-      <button class="btn btn-outline" id="copy-tid">📋 Copy ID</button>
-      <a href="/tracking.html" class="btn btn-primary" id="close-modal">Track My Repair →</a>
+    <div class="page-hero">
+      <span class="section-label">Submit a Request</span>
+      <h1 style="margin-top: 10px">Request Appliance Repair</h1>
+      <p style="color: var(--text-2); max-width: 500px; margin: 12px auto 0">
+        Fill in the form below. You'll receive a tracking ID to monitor your
+        repair progress.
+      </p>
     </div>
-  </div>
-</div>
 
-<script src="/js/main.js"></script>
-<script src="/js/request.js"></script>
-</body>
+    <section class="section" style="padding-top: 50px">
+      <div class="container" style="max-width: 760px">
+        <form
+          id="request-form"
+          class="card"
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            padding: 36px;
+          "
+        >
+          <h3
+            style="
+              font-size: 1.1rem;
+              color: var(--blue-light);
+              padding-bottom: 14px;
+              border-bottom: 1px solid var(--border);
+            "
+          >
+            👤 Customer Information
+          </h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Full Name *</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="e.g. Ahmad Khan"
+                required
+              />
+              <span class="form-error" id="err-name"></span>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="e.g. 03001234567"
+                required
+              />
+              <span class="form-error" id="err-phone"></span>
+            </div>
+          </div>
+
+          <div class="form-group" id="address-row" style="display: none">
+            <label for="address">Home Address *</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              placeholder="Your full address for home visit"
+            />
+            <span class="form-error" id="err-address"></span>
+          </div>
+
+          <h3
+            style="
+              font-size: 1.1rem;
+              color: var(--blue-light);
+              padding-bottom: 14px;
+              border-bottom: 1px solid var(--border);
+              margin-top: 4px;
+            "
+          >
+            🔧 Appliance Details
+          </h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="appliance_type">Appliance Type *</label>
+              <select id="appliance_type" name="appliance_type" required>
+                <option value="">-- Select Appliance --</option>
+                <option>Washing Machine</option>
+                <option>Freezer</option>
+                <option>Refrigerator</option>
+                <option>Stabilizer</option>
+                <option>Electric Iron</option>
+                <option>Water Dispenser</option>
+                <option>Fan</option>
+                <option>Microwave Oven</option>
+                <option>Other</option>
+              </select>
+              <span class="form-error" id="err-appliance"></span>
+            </div>
+            <div class="form-group">
+              <label for="appliance_brand">Brand / Model</label>
+              <input
+                type="text"
+                id="appliance_brand"
+                name="appliance_brand"
+                placeholder="e.g. Haier, Dawlance, Orient"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="problem_description">Problem Description *</label>
+            <textarea
+              id="problem_description"
+              name="problem_description"
+              rows="4"
+              placeholder="Describe the issue clearly e.g. 'Machine not spinning, makes loud noise when starting...'"
+              required
+            ></textarea>
+            <span class="form-error" id="err-problem"></span>
+          </div>
+
+          <h3
+            style="
+              font-size: 1.1rem;
+              color: var(--blue-light);
+              padding-bottom: 14px;
+              border-bottom: 1px solid var(--border);
+              margin-top: 4px;
+            "
+          >
+            🏠 Service Type *
+          </h3>
+
+          <div class="service-type-group">
+            <div class="service-type-card">
+              <input
+                type="radio"
+                id="stype-shop"
+                name="service_type"
+                value="Shop Repair"
+                checked
+              />
+              <label for="stype-shop"
+                ><span class="stype-icon">🏪</span>
+                <div>
+                  <strong>Shop Repair</strong><br /><small
+                    style="color: var(--text-2); font-weight: 400"
+                    >Bring appliance to our shop</small
+                  >
+                </div></label
+              >
+            </div>
+            <div class="service-type-card">
+              <input
+                type="radio"
+                id="stype-home"
+                name="service_type"
+                value="Home Service"
+              />
+              <label for="stype-home"
+                ><span class="stype-icon">🏠</span>
+                <div>
+                  <strong>Home Service</strong><br /><small
+                    style="color: var(--text-2); font-weight: 400"
+                    >Technician visits your home</small
+                  >
+                </div></label
+              >
+            </div>
+          </div>
+          <span class="form-error" id="err-service"></span>
+
+          <button
+            type="submit"
+            id="submit-btn"
+            class="btn btn-primary"
+            style="width: 100%; justify-content: center; padding: 15px"
+          >
+            🔧 Submit Repair Request
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="success-modal">
+      <div class="modal">
+        <div class="modal-icon">✅</div>
+        <h2>Request Submitted!</h2>
+        <p>
+          Your repair request has been received. Save your
+          <strong>Tracking ID</strong> below to monitor progress:
+        </p>
+        <div
+          class="tracking-id-display"
+          id="tracking-id-value"
+          title="Click to copy"
+        ></div>
+        <p
+          style="font-size: 0.82rem; color: var(--text-2); margin-bottom: 20px"
+        >
+          Click the ID above to copy it. Use this ID on the
+          <a href="/tracking.html" style="color: var(--blue-light)"
+            >Track Repair</a
+          >
+          page.
+        </p>
+        <div
+          style="
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+          "
+        >
+          <button class="btn btn-outline" id="copy-tid">📋 Copy ID</button>
+          <a href="/tracking.html" class="btn btn-primary" id="close-modal"
+            >Track My Repair →</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/config.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/request.js"></script>
+  </body>
 </html>

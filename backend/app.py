@@ -4,7 +4,12 @@ Run: python app.py
 """
 
 import os
-from flask import Flask, send_from_directory
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from config import Config
 from routes.customer_routes import customer_bp
@@ -16,7 +21,12 @@ FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'f
 
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app, supports_credentials=True)
+app.config['SESSION_COOKIE_SAMESITE'] = Config.SESSION_COOKIE_SAMESITE
+app.config['SESSION_COOKIE_SECURE'] = Config.SESSION_COOKIE_SECURE
+app.config['PORT'] = Config.PORT
+
+allowed_origins = [origin.strip() for origin in os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://localhost:5000').split(',') if origin.strip()]
+CORS(app, resources={r"/api/*": {"origins": allowed_origins}}, supports_credentials=True)
 
 # ── Blueprints ─────────────────────────────────────────────────────────────────
 
@@ -24,6 +34,10 @@ app.register_blueprint(customer_bp, url_prefix='/api')
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
 
 # ── Serve Frontend ─────────────────────────────────────────────────────────────
+
+@app.route('/health')
+def health():
+    return jsonify({"status": "ok", "service": "electrofix-backend"})
 
 @app.route('/')
 def index():
@@ -43,7 +57,7 @@ def serve_frontend(path):
 if __name__ == '__main__':
     print("=" * 55)
     print("  ElectroFix Repair Management System")
-    print("  http://localhost:5000")
-    print("  Admin Panel: http://localhost:5000/admin/login.html")
+    print("  http://localhost:" + str(Config.PORT))
+    print("  Admin Panel: http://localhost:" + str(Config.PORT) + "/admin/login.html")
     print("=" * 55)
-    app.run(debug=Config.DEBUG, port=5000)
+    app.run(host='0.0.0.0', debug=Config.DEBUG, port=Config.PORT)

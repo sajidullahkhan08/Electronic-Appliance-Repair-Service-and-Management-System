@@ -1,134 +1,238 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Home Services — ElectroFix Admin</title>
-  <link rel="stylesheet" href="/css/style.css"/>
-  <link rel="stylesheet" href="/css/admin.css"/>
-</head>
-<body class="admin-body">
-
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header"><div class="sidebar-logo-icon">⚡</div><div class="sidebar-title">Electro<span>Fix</span></div></div>
-  <nav class="sidebar-nav">
-    <a href="/admin/dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
-    <a href="/admin/requests.html"><span class="nav-icon">🔧</span> Repair Requests</a>
-    <a href="/admin/customers.html"><span class="nav-icon">👥</span> Customers</a>
-    <a href="/admin/home-services.html" class="active"><span class="nav-icon">🏠</span> Home Services</a>
-  </nav>
-  <div class="sidebar-footer"><a onclick="doLogout()">🚪 Logout</a></div>
-</aside>
-
-<div class="admin-main">
-  <div class="admin-topbar">
-    <div style="display:flex;align-items:center;gap:14px;">
-      <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
-      <div class="topbar-left"><h1>Home Services</h1><p>Requests requiring technician visits</p></div>
-    </div>
-    <div class="topbar-right"><div class="topbar-badge">👤 <span id="admin-username">Admin</span></div></div>
-  </div>
-
-  <div class="admin-content">
-    <div class="table-wrapper">
-      <div class="table-header">
-        <h3>🏠 Home Service Requests</h3>
-        <input type="text" class="search-input" id="search-home" placeholder="🔍 Search…"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Services — ElectroFix Admin</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/admin.css" />
+  </head>
+  <body class="admin-body">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon">⚡</div>
+        <div class="sidebar-title">Electro<span>Fix</span></div>
       </div>
-      <table>
-        <thead><tr>
-          <th>Tracking ID</th><th>Customer</th><th>Phone</th><th>Address</th><th>Appliance</th><th>Status</th><th>Date</th><th>Action</th>
-        </tr></thead>
-        <tbody id="home-tbody">
-          <tr><td colspan="8" class="empty-state"><div class="loader" style="margin:20px auto;"></div></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+      <nav class="sidebar-nav">
+        <a href="/admin/dashboard.html"
+          ><span class="nav-icon">📊</span> Dashboard</a
+        >
+        <a href="/admin/requests.html"
+          ><span class="nav-icon">🔧</span> Repair Requests</a
+        >
+        <a href="/admin/customers.html"
+          ><span class="nav-icon">👥</span> Customers</a
+        >
+        <a href="/admin/home-services.html" class="active"
+          ><span class="nav-icon">🏠</span> Home Services</a
+        >
+        <a href="/admin/settings.html"
+          ><span class="nav-icon">⚙️</span> Settings</a
+        >
+      </nav>
+      <div class="sidebar-footer"><a onclick="doLogout()">🚪 Logout</a></div>
+    </aside>
 
-<!-- Status Update Modal -->
-<div class="modal-overlay" id="home-modal">
-  <div class="modal" style="max-width:440px;text-align:left;">
-    <h2 style="margin-bottom:4px;">Update Status</h2>
-    <p id="home-modal-info" style="margin-bottom:18px;"></p>
-    <div class="form-group" style="margin-bottom:16px;">
-      <label style="font-size:0.8rem;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.1em;">Status</label>
-      <select id="home-status-select" class="status-select" style="width:100%;padding:10px;font-size:0.9rem;margin-top:8px;">
-        <option>Pending</option>
-        <option>Scheduled</option>
-        <option>Technician Dispatched</option>
-        <option>Repairing</option>
-        <option>Completed</option>
-      </select>
-    </div>
-    <div class="form-group" style="margin-bottom:20px;">
-      <label style="font-size:0.8rem;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.1em;">Notes</label>
-      <textarea id="home-notes" rows="3" placeholder="Optional notes…" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text-1);padding:10px 14px;font-family:inherit;width:100%;margin-top:8px;resize:vertical;"></textarea>
-    </div>
-    <div style="display:flex;gap:12px;justify-content:flex-end;">
-      <button class="btn btn-outline" onclick="document.getElementById('home-modal').classList.remove('show')">Cancel</button>
-      <button class="btn btn-primary" id="home-save-btn">💾 Save</button>
-    </div>
-  </div>
-</div>
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <div style="display: flex; align-items: center; gap: 14px">
+          <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+          <div class="topbar-left">
+            <h1>Home Services</h1>
+            <p>Requests requiring technician visits</p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-badge">
+            👤 <span id="admin-username">Admin</span>
+          </div>
+        </div>
+      </div>
 
-<script src="/js/admin.js"></script>
-<script>
-let homeCurrentId = null;
+      <div class="admin-content">
+        <div class="table-wrapper">
+          <div class="table-header">
+            <h3>🏠 Home Service Requests</h3>
+            <input
+              type="text"
+              class="search-input"
+              id="search-home"
+              placeholder="🔍 Search…"
+            />
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Tracking ID</th>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Appliance</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="home-tbody">
+              <tr>
+                <td colspan="8" class="empty-state">
+                  <div class="loader" style="margin: 20px auto"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
-(async () => {
-  await requireAuth();
-  await renderHome();
-  filterTable('search-home', 'home-tbody');
-})();
+    <!-- Status Update Modal -->
+    <div class="modal-overlay" id="home-modal">
+      <div class="modal" style="max-width: 440px; text-align: left">
+        <h2 style="margin-bottom: 4px">Update Status</h2>
+        <p id="home-modal-info" style="margin-bottom: 18px"></p>
+        <div class="form-group" style="margin-bottom: 16px">
+          <label
+            style="
+              font-size: 0.8rem;
+              font-weight: 700;
+              color: var(--text-2);
+              text-transform: uppercase;
+              letter-spacing: 0.1em;
+            "
+            >Status</label
+          >
+          <select
+            id="home-status-select"
+            class="status-select"
+            style="
+              width: 100%;
+              padding: 10px;
+              font-size: 0.9rem;
+              margin-top: 8px;
+            "
+          >
+            <option>Pending</option>
+            <option>Scheduled</option>
+            <option>Technician Dispatched</option>
+            <option>Repairing</option>
+            <option>Completed</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px">
+          <label
+            style="
+              font-size: 0.8rem;
+              font-weight: 700;
+              color: var(--text-2);
+              text-transform: uppercase;
+              letter-spacing: 0.1em;
+            "
+            >Notes</label
+          >
+          <textarea
+            id="home-notes"
+            rows="3"
+            placeholder="Optional notes…"
+            style="
+              background: rgba(255, 255, 255, 0.05);
+              border: 1px solid var(--border);
+              border-radius: 8px;
+              color: var(--text-1);
+              padding: 10px 14px;
+              font-family: inherit;
+              width: 100%;
+              margin-top: 8px;
+              resize: vertical;
+            "
+          ></textarea>
+        </div>
+        <div style="display: flex; gap: 12px; justify-content: flex-end">
+          <button
+            class="btn btn-outline"
+            onclick="
+              document.getElementById('home-modal').classList.remove('show')
+            "
+          >
+            Cancel
+          </button>
+          <button class="btn btn-primary" id="home-save-btn">💾 Save</button>
+        </div>
+      </div>
+    </div>
 
-async function renderHome() {
-  const res  = await fetch('/api/admin/home-services', {credentials:'include'});
-  const json = await res.json();
-  const rows = json.success ? json.data : [];
-  const tbody = document.getElementById('home-tbody');
-  if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="empty-state"><div class="empty-icon">🏠</div>No home service requests yet.</td></tr>';
-    return;
-  }
-  tbody.innerHTML = rows.map(r => `
+    <script src="/js/config.js"></script>
+    <script src="/js/admin.js"></script>
+    <script>
+      let homeCurrentId = null;
+
+      (async () => {
+        await requireAuth();
+        await renderHome();
+        filterTable("search-home", "home-tbody");
+      })();
+
+      async function renderHome() {
+        const res = await fetch(
+          `${window.apiUrl ? window.apiUrl("/admin/home-services") : "/api/admin/home-services"}`,
+          { credentials: "include" },
+        );
+        const json = await res.json();
+        const rows = json.success ? json.data : [];
+        const tbody = document.getElementById("home-tbody");
+        if (!rows.length) {
+          tbody.innerHTML =
+            '<tr><td colspan="8" class="empty-state"><div class="empty-icon">🏠</div>No home service requests yet.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = rows
+          .map(
+            (r) => `
     <tr>
       <td class="td-tracking">${r.tracking_id}</td>
       <td>${r.customer_name}</td>
       <td><a href="tel:${r.phone}" style="color:var(--blue-light);">${r.phone}</a></td>
-      <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.address || '—'}</td>
+      <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.address || "—"}</td>
       <td>${r.appliance_type}</td>
       <td>${statusBadge(r.status)}</td>
       <td style="white-space:nowrap;">${r.request_date}</td>
       <td><button class="btn-sm btn-sm-blue" onclick="openHomeModal(${r.request_id},'${r.customer_name}','${r.tracking_id}','${r.status}')">✏️ Update</button></td>
-    </tr>`).join('');
-}
+    </tr>`,
+          )
+          .join("");
+      }
 
-function openHomeModal(id, name, tid, status) {
-  homeCurrentId = id;
-  document.getElementById('home-modal-info').innerHTML = `<span class="td-tracking">${tid}</span> — ${name}`;
-  document.getElementById('home-status-select').value = status;
-  document.getElementById('home-notes').value = '';
-  document.getElementById('home-modal').classList.add('show');
-}
+      function openHomeModal(id, name, tid, status) {
+        homeCurrentId = id;
+        document.getElementById("home-modal-info").innerHTML =
+          `<span class="td-tracking">${tid}</span> — ${name}`;
+        document.getElementById("home-status-select").value = status;
+        document.getElementById("home-notes").value = "";
+        document.getElementById("home-modal").classList.add("show");
+      }
 
-document.getElementById('home-save-btn').addEventListener('click', async () => {
-  const status = document.getElementById('home-status-select').value;
-  const notes  = document.getElementById('home-notes').value;
-  const ok = await updateStatus(homeCurrentId, status, notes);
-  if (ok) {
-    document.getElementById('home-modal').classList.remove('show');
-    await renderHome();
-    window.showToast('Updated!', 'Home service status updated.', 'success');
-  } else {
-    window.showToast('Error', 'Could not update status.', 'error');
-  }
-});
+      document
+        .getElementById("home-save-btn")
+        .addEventListener("click", async () => {
+          const status = document.getElementById("home-status-select").value;
+          const notes = document.getElementById("home-notes").value;
+          const ok = await updateStatus(homeCurrentId, status, notes);
+          if (ok) {
+            document.getElementById("home-modal").classList.remove("show");
+            await renderHome();
+            window.showToast(
+              "Updated!",
+              "Home service status updated.",
+              "success",
+            );
+          } else {
+            window.showToast("Error", "Could not update status.", "error");
+          }
+        });
 
-document.getElementById('home-modal').addEventListener('click', e => {
-  if (e.target === document.getElementById('home-modal')) document.getElementById('home-modal').classList.remove('show');
-});
-</script>
-</body>
+      document.getElementById("home-modal").addEventListener("click", (e) => {
+        if (e.target === document.getElementById("home-modal"))
+          document.getElementById("home-modal").classList.remove("show");
+      });
+    </script>
+  </body>
 </html>

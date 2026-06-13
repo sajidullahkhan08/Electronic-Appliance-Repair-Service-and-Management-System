@@ -27,3 +27,23 @@ def verify_admin(username, password):
     if admin and check_password_hash(admin['password_hash'], password):
         return admin
     return None
+
+
+def update_admin_password(admin_id, new_password):
+    """
+    Hashes new_password and saves it for the given admin_id.
+    Returns True on success, False if admin not found.
+    """
+    from werkzeug.security import generate_password_hash
+    conn = get_db()
+    try:
+        with conn.cursor() as cur:
+            hashed = generate_password_hash(new_password)
+            cur.execute(
+                "UPDATE admins SET password_hash = %s WHERE admin_id = %s",
+                (hashed, admin_id)
+            )
+            conn.commit()
+            return cur.rowcount > 0
+    finally:
+        conn.close()
