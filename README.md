@@ -23,11 +23,11 @@ ElectroFix will be a web-based platform that digitizes the complete workflow of 
 
 ### Technology Stack
 
-| Layer    | Technology              |
-|----------|-------------------------|
-| Frontend | HTML, CSS, JavaScript   |
-| Backend  | Python (Flask)          |
-| Database | SQLite / MySQL          |
+| Layer    | Technology            |
+| -------- | --------------------- |
+| Frontend | HTML, CSS, JavaScript |
+| Backend  | Python (Flask)        |
+| Database | SQLite / MySQL        |
 
 ## Key Features
 
@@ -47,13 +47,15 @@ ElectroFix will be a web-based platform that digitizes the complete workflow of 
 3. **Repair Status Tracking**
    - Real-time progress tracking using Tracking ID
    - Step-by-step timeline view
-   
+
    **Shop Repair Status Flow:**
+
    ```
    Pending → Under Inspection → Repairing → Completed → Ready for Pickup
    ```
-   
+
    **Home Service Status Flow:**
+
    ```
    Pending → Scheduled → Technician Dispatched → Repairing → Completed
    ```
@@ -92,6 +94,7 @@ ElectroFix will be a web-based platform that digitizes the complete workflow of 
      - Completed repairs
      - Home service requests
      - Total customers
+     - Settings for Password Update
 
 3. **Manage Repair Requests**
    - View all submitted requests in a searchable table
@@ -110,10 +113,10 @@ ElectroFix will be a web-based platform that digitizes the complete workflow of 
 
 ## Business Owners
 
-| Owner | Contact | Alternate |
-|-------|---------|-----------|
+| Owner               | Contact      | Alternate    |
+| ------------------- | ------------ | ------------ |
 | **Nizamullah Khan** | 0344-0025964 | 0326-0025964 |
-| **Imranullah Khan** | 0344-3771782 | — |
+| **Imranullah Khan** | 0344-3771782 | —            |
 
 ### Shop Location
 
@@ -133,16 +136,19 @@ ElectroFix will be a web-based platform that digitizes the complete workflow of 
 
 1. Clone the repository
 2. Navigate to the backend directory and install dependencies:
+
    ```bash
    pip install -r requirements.txt
    ```
 
 3. Initialize the database:
+
    ```bash
    python init_db.py
    ```
 
 4. Run the Flask application:
+
    ```bash
    python app.py
    ```
@@ -164,7 +170,8 @@ ElectroFix will be a web-based platform that digitizes the complete workflow of 
 │   │   ├── dashboard.html
 │   │   ├── requests.html
 │   │   ├── customers.html
-│   │   └── home-services.html
+│   │   ├── home-services.html
+|   |   └── settings.html
 │   ├── css/
 │   │   ├── style.css
 │   │   └── admin.css
