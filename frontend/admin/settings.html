@@ -15,28 +15,18 @@
         <div class="sidebar-title">Electro<span>Fix</span></div>
       </div>
       <nav class="sidebar-nav">
-        <a href="/admin/dashboard.html"
-          ><span class="nav-icon">📊</span> Dashboard</a
-        >
-        <a href="/admin/requests.html"
-          ><span class="nav-icon">🔧</span> Repair Requests</a
-        >
-        <a href="/admin/customers.html"
-          ><span class="nav-icon">👥</span> Customers</a
-        >
-        <a href="/admin/home-services.html"
-          ><span class="nav-icon">🏠</span> Home Services</a
-        >
-        <a href="/admin/settings.html" class="active"
-          ><span class="nav-icon">⚙️</span> Settings</a
-        >
+        <a href="/admin/dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+        <a href="/admin/requests.html"><span class="nav-icon">🔧</span> Repair Requests</a>
+        <a href="/admin/customers.html"><span class="nav-icon">👥</span> Customers</a>
+        <a href="/admin/home-services.html"><span class="nav-icon">🏠</span> Home Services</a>
+        <a href="/admin/settings.html" class="active"><span class="nav-icon">⚙️</span> Settings</a>
       </nav>
       <div class="sidebar-footer"><a onclick="doLogout()">🚪 Logout</a></div>
     </aside>
 
     <div class="admin-main">
       <div class="admin-topbar">
-        <div style="display: flex; align-items: center; gap: 14px">
+        <div style="display:flex;align-items:center;gap:14px;">
           <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
           <div class="topbar-left">
             <h1>Settings</h1>
@@ -44,132 +34,265 @@
           </div>
         </div>
         <div class="topbar-right">
-          <div class="topbar-badge">👤 <span id="admin-username">Admin</span></div>
+          <div class="topbar-badge">📱 <span id="admin-username">Admin</span></div>
         </div>
       </div>
 
       <div class="admin-content">
-        <div style="max-width: 500px;">
+        <div class="settings-grid">
 
-          <!-- Change Password Card -->
-          <div class="card" style="padding: 32px;">
-            <h2 style="margin-bottom: 6px; font-size: 1.2rem;">🔐 Change Password</h2>
-            <p style="color: var(--text-2); font-size: 0.88rem; margin-bottom: 28px;">
-              Enter a new password below. It must be at least 6 characters long.
-            </p>
+          <!-- ══ Change Password ═══════════════════════════════════════════ -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <span class="settings-card-icon">🔐</span>
+              <div>
+                <h2>Change Password</h2>
+                <p>An OTP will be sent to your registered phone number to confirm this action.</p>
+              </div>
+            </div>
 
-            <div
-              id="pw-error"
-              style="
-                display: none;
-                background: rgba(239,68,68,0.1);
-                border: 1px solid rgba(239,68,68,0.3);
-                border-radius: 8px;
-                padding: 10px 14px;
-                font-size: 0.85rem;
-                color: var(--red);
-                margin-bottom: 18px;
-              "
-            ></div>
+            <div id="pw-error"   class="alert-box alert-error"   style="display:none;"></div>
+            <div id="pw-success" class="alert-box alert-success" style="display:none;"></div>
 
-            <div
-              id="pw-success"
-              style="
-                display: none;
-                background: rgba(16,185,129,0.1);
-                border: 1px solid rgba(16,185,129,0.3);
-                border-radius: 8px;
-                padding: 10px 14px;
-                font-size: 0.85rem;
-                color: var(--green);
-                margin-bottom: 18px;
-              "
-            ></div>
+            <!-- Step 1 — Request OTP -->
+            <div id="pw-step-1">
+              <button id="pw-send-otp-btn" class="btn btn-primary settings-btn">
+                📲 Send OTP to My Phone
+              </button>
+            </div>
 
-            <form id="pw-form" style="display: flex; flex-direction: column; gap: 18px;">
+            <!-- Step 2 — Enter OTP + new password -->
+            <form id="pw-form" style="display:none;">
+              <div class="otp-info-bar">
+                ✅ OTP sent! Enter it below along with your new password.
+              </div>
+              <div class="form-group">
+                <label for="pw-otp">6-Digit OTP</label>
+                <input type="text" id="pw-otp" class="otp-input" placeholder="_ _ _ _ _ _"
+                  maxlength="6" inputmode="numeric" autocomplete="one-time-code" required />
+              </div>
               <div class="form-group">
                 <label for="new-password">New Password</label>
-                <input
-                  type="password"
-                  id="new-password"
-                  placeholder="Minimum 6 characters"
-                  autocomplete="new-password"
-                  required
-                />
+                <input type="password" id="new-password" placeholder="Minimum 6 characters"
+                  autocomplete="new-password" required />
               </div>
               <div class="form-group">
                 <label for="confirm-password">Confirm New Password</label>
-                <input
-                  type="password"
-                  id="confirm-password"
-                  placeholder="Re-enter new password"
-                  autocomplete="new-password"
-                  required
-                />
+                <input type="password" id="confirm-password" placeholder="Re-enter new password"
+                  autocomplete="new-password" required />
               </div>
-              <button
-                type="submit"
-                id="pw-btn"
-                class="btn btn-primary"
-                style="width: 100%; justify-content: center; padding: 14px;"
-              >
-                🔒 Update Password
-              </button>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button type="submit" id="pw-submit-btn" class="btn btn-primary settings-btn">
+                  🔒 Update Password
+                </button>
+                <button type="button" class="btn btn-outline settings-btn" onclick="resetPwForm()">
+                  ↩ Start Over
+                </button>
+              </div>
             </form>
           </div>
 
-        </div>
+          <!-- ══ Change Phone Number ════════════════════════════════════════ -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <span class="settings-card-icon">📱</span>
+              <div>
+                <h2>Change Phone Number</h2>
+                <p>An OTP will be sent to your <strong>current</strong> phone number first to verify your identity.</p>
+              </div>
+            </div>
+
+            <div id="ph-error"   class="alert-box alert-error"   style="display:none;"></div>
+            <div id="ph-success" class="alert-box alert-success" style="display:none;"></div>
+
+            <!-- Step 1 — Request OTP -->
+            <div id="ph-step-1">
+              <button id="ph-send-otp-btn" class="btn btn-primary settings-btn">
+                📲 Send OTP to Current Phone
+              </button>
+            </div>
+
+            <!-- Step 2 — Enter OTP + new phone -->
+            <form id="ph-form" style="display:none;">
+              <div class="otp-info-bar">
+                ✅ OTP sent! Enter it below along with your new phone number.
+              </div>
+              <div class="form-group">
+                <label for="ph-otp">6-Digit OTP</label>
+                <input type="text" id="ph-otp" class="otp-input" placeholder="_ _ _ _ _ _"
+                  maxlength="6" inputmode="numeric" autocomplete="one-time-code" required />
+              </div>
+              <div class="form-group">
+                <label for="new-phone">New Phone Number</label>
+                <div class="phone-input-wrap">
+                  <span class="phone-prefix">🇵🇰 +92</span>
+                  <input type="tel" id="new-phone" placeholder="03001234567"
+                    maxlength="15" autocomplete="tel" required />
+                </div>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button type="submit" id="ph-submit-btn" class="btn btn-primary settings-btn">
+                  📱 Update Phone Number
+                </button>
+                <button type="button" class="btn btn-outline settings-btn" onclick="resetPhForm()">
+                  ↩ Start Over
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </div><!-- /.settings-grid -->
       </div>
     </div>
 
     <script src="/js/config.js"></script>
     <script src="/js/admin.js"></script>
     <script>
-      (async () => {
-        await requireAuth();
-      })();
+      (async () => { await requireAuth(); })();
 
-      document.getElementById('pw-form').addEventListener('submit', async (e) => {
+      // ── Helper: show message in an alert box ──────────────────────────
+      function showMsg(id, msg, type) {
+        const el = document.getElementById(id);
+        el.textContent = msg;
+        el.className = `alert-box alert-${type}`;
+        el.style.display = 'block';
+      }
+      function hideMsg(id) {
+        document.getElementById(id).style.display = 'none';
+      }
+
+      // ═══════════════════════════════════════════════════════════════════
+      // PASSWORD CHANGE FLOW
+      // ═══════════════════════════════════════════════════════════════════
+
+      document.getElementById('pw-send-otp-btn').addEventListener('click', async function () {
+        this.disabled = true;
+        this.textContent = 'Sending OTP…';
+        hideMsg('pw-error');
+
+        const result = await sendOtp('change_password');
+
+        if (result.success) {
+          document.getElementById('pw-step-1').style.display = 'none';
+          document.getElementById('pw-form').style.display   = 'block';
+        } else {
+          showMsg('pw-error', result.error || 'Failed to send OTP.', 'error');
+          this.disabled = false;
+          this.textContent = '📲 Send OTP to My Phone';
+        }
+      });
+
+      document.getElementById('pw-form').addEventListener('submit', async function (e) {
         e.preventDefault();
+        hideMsg('pw-error');
+        hideMsg('pw-success');
 
-        const errEl  = document.getElementById('pw-error');
-        const okEl   = document.getElementById('pw-success');
-        const btn    = document.getElementById('pw-btn');
-        const newPw  = document.getElementById('new-password').value;
-        const confPw = document.getElementById('confirm-password').value;
+        const otp     = document.getElementById('pw-otp').value.trim();
+        const newPw   = document.getElementById('new-password').value;
+        const confPw  = document.getElementById('confirm-password').value;
+        const btn     = document.getElementById('pw-submit-btn');
 
-        // Hide previous messages
-        errEl.style.display = 'none';
-        okEl.style.display  = 'none';
-
-        // Client-side validation
         if (newPw.length < 6) {
-          errEl.textContent = 'Password must be at least 6 characters.';
-          errEl.style.display = 'block';
-          return;
+          return showMsg('pw-error', 'Password must be at least 6 characters.', 'error');
         }
         if (newPw !== confPw) {
-          errEl.textContent = 'Passwords do not match.';
-          errEl.style.display = 'block';
-          return;
+          return showMsg('pw-error', 'Passwords do not match.', 'error');
         }
 
         btn.disabled = true;
         btn.textContent = 'Updating…';
 
-        const result = await changePassword(newPw, confPw);
+        const result = await changePassword(otp, newPw, confPw);
 
         btn.disabled = false;
         btn.textContent = '🔒 Update Password';
 
         if (result.success) {
-          okEl.textContent = 'Password updated successfully!';
-          okEl.style.display = 'block';
-          document.getElementById('pw-form').reset();
+          showMsg('pw-success', 'Password updated successfully! You can log in with your new password.', 'success');
+          this.reset();
+          resetPwForm();
         } else {
-          errEl.textContent = result.error || 'Failed to update password.';
-          errEl.style.display = 'block';
+          showMsg('pw-error', result.error || 'Failed to update password.', 'error');
         }
+      });
+
+      function resetPwForm() {
+        document.getElementById('pw-step-1').style.display = 'block';
+        document.getElementById('pw-form').style.display   = 'none';
+        document.getElementById('pw-send-otp-btn').disabled = false;
+        document.getElementById('pw-send-otp-btn').textContent = '📲 Send OTP to My Phone';
+        hideMsg('pw-error');
+        hideMsg('pw-success');
+      }
+
+      // ═══════════════════════════════════════════════════════════════════
+      // PHONE CHANGE FLOW
+      // ═══════════════════════════════════════════════════════════════════
+
+      document.getElementById('ph-send-otp-btn').addEventListener('click', async function () {
+        this.disabled = true;
+        this.textContent = 'Sending OTP…';
+        hideMsg('ph-error');
+
+        const result = await sendOtp('change_phone');
+
+        if (result.success) {
+          document.getElementById('ph-step-1').style.display = 'none';
+          document.getElementById('ph-form').style.display   = 'block';
+        } else {
+          showMsg('ph-error', result.error || 'Failed to send OTP.', 'error');
+          this.disabled = false;
+          this.textContent = '📲 Send OTP to Current Phone';
+        }
+      });
+
+      document.getElementById('ph-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        hideMsg('ph-error');
+        hideMsg('ph-success');
+
+        const otp      = document.getElementById('ph-otp').value.trim();
+        const newPhone = document.getElementById('new-phone').value.trim();
+        const btn      = document.getElementById('ph-submit-btn');
+
+        if (newPhone.length < 10) {
+          return showMsg('ph-error', 'Enter a valid phone number.', 'error');
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Updating…';
+
+        const result = await changePhone(otp, newPhone);
+
+        btn.disabled = false;
+        btn.textContent = '📱 Update Phone Number';
+
+        if (result.success) {
+          showMsg('ph-success', 'Phone number updated! You must use the new number to log in next time.', 'success');
+          this.reset();
+          resetPhForm();
+          // Update topbar badge
+          const badge = document.getElementById('admin-username');
+          if (badge) badge.textContent = newPhone;
+        } else {
+          showMsg('ph-error', result.error || 'Failed to update phone.', 'error');
+        }
+      });
+
+      function resetPhForm() {
+        document.getElementById('ph-step-1').style.display = 'block';
+        document.getElementById('ph-form').style.display   = 'none';
+        document.getElementById('ph-send-otp-btn').disabled = false;
+        document.getElementById('ph-send-otp-btn').textContent = '📲 Send OTP to Current Phone';
+        hideMsg('ph-error');
+        hideMsg('ph-success');
+      }
+
+      // Allow only digits in OTP fields
+      document.querySelectorAll('.otp-input').forEach(inp => {
+        inp.addEventListener('input', () => {
+          inp.value = inp.value.replace(/\D/g, '');
+        });
       });
     </script>
   </body>

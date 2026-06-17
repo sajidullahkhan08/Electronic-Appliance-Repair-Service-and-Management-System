@@ -1,0 +1,52 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.dll
+*.egg-info/
+.eggs/
+*.egg
+build/
+dist/
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# --- Flask / Django / general ---
+*.db
+*.sqlite3
+*.sqlite
+instance/
+
+# --- Environment files ---
+.env
+.env.*
+
+# --- Node / Frontend (if used) ---
+node_modules/
+.npm/
+.yarn/
+.yarnrc*
+.pnpm-store/
+dist/
+build/
+
+# --- Editors / OS ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# --- Project specific ---
+# Ignore generated caches and compiled artifacts under backend/frontend
+backend/__pycache__/
+frontend/__pycache__/
+

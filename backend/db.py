@@ -1,23 +1,20 @@
 """
 db.py — Shared database connection helper.
+=========================================
+LOCAL  : Connects to XAMPP MySQL on localhost:3306.
+PROD   : Connects to Railway MySQL plugin using injected env vars.
+         No code change needed — config.py handles both via os.environ.
 """
 
 import pymysql
 from config import Config
 
-### For production (with SSL)
-def _ssl_config():
-    ssl_mode = (Config.MYSQL_SSL_MODE or '').upper()
-    if ssl_mode in ('REQUIRED', 'VERIFY_CA', 'VERIFY_IDENTITY'):
-        return {
-            'ca': Config.MYSQL_SSL_CA or None,
-            'check_hostname': bool(Config.MYSQL_SSL_CA),
-        }
-    return None
-
 
 def get_connection(database=None):
-    """Return a new PyMySQL connection using DictCursor and cloud-friendly SSL settings."""
+    """
+    Return a raw PyMySQL connection.
+    Pass database=None to connect without selecting a DB (used by init_db.py).
+    """
     conn_kwargs = dict(
         host=Config.MYSQL_HOST,
         port=Config.MYSQL_PORT,
@@ -25,17 +22,15 @@ def get_connection(database=None):
         password=Config.MYSQL_PASSWORD,
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor,
+        # PROD note: Railway MySQL does not require SSL by default.
+        # If you enable SSL in Railway, add:
+        #   ssl={'ca': '/path/to/ca-cert.pem'}
     )
     if database:
         conn_kwargs['database'] = database
-
-    ssl_config = _ssl_config()
-    if ssl_config is not None:
-        conn_kwargs['ssl'] = ssl_config
-
     return pymysql.connect(**conn_kwargs)
 
 
 def get_db():
-    """Return a new PyMySQL connection to the configured database."""
+    """Return a connection to the configured application database."""
     return get_connection(database=Config.MYSQL_DB)

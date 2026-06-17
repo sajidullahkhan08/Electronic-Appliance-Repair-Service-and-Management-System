@@ -465,3 +465,153 @@ tbody tr:hover td {
   font-size: 0.92rem;
   color: #0f172a;
 }
+
+/* ── Alert / Message Boxes ───────────────────────────────────── */
+.alert-box {
+  border-radius: 8px;
+  padding: 11px 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+.alert-error {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  color: #dc2626;
+}
+.alert-success {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  color: #059669;
+}
+
+/* ── Phone Input with Flag Prefix ────────────────────────────── */
+.phone-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dbe2f1;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: box-shadow 0.2s, border-color 0.2s;
+  background: #fff;
+}
+.phone-input-wrap:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+.phone-prefix {
+  padding: 0 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #475569;
+  background: #f1f5f9;
+  border-right: 1px solid #dbe2f1;
+  white-space: nowrap;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  min-height: 46px;
+  user-select: none;
+}
+.phone-input-wrap input {
+  flex: 1;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 12px 14px;
+  font-size: 0.92rem;
+  background: transparent;
+  color: #0f172a;
+  outline: none;
+  font-family: inherit;
+}
+.phone-input-wrap input::placeholder {
+  color: #94a3b8;
+}
+
+/* ── OTP Input ───────────────────────────────────────────────── */
+.otp-input {
+  letter-spacing: 0.4em;
+  font-size: 1.3rem;
+  font-weight: 800;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  padding: 12px !important;
+}
+
+/* ── OTP Info Banner ─────────────────────────────────────────── */
+.otp-info-bar {
+  background: rgba(37, 99, 235, 0.07);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.84rem;
+  color: #1d4ed8;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* ── Settings Page Grid ──────────────────────────────────────── */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+  max-width: 900px;
+}
+
+/* ── Settings Card ───────────────────────────────────────────── */
+.settings-card {
+  background: #ffffff;
+  border: 1px solid #e6e8f2;
+  border-radius: 20px;
+  padding: 30px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.settings-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #edf0f7;
+}
+.settings-card-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.settings-card-header h2 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+.settings-card-header p {
+  font-size: 0.82rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+.settings-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 13px 20px;
+  margin-top: 6px;
+}
+
+/* ── Card styles for settings ────────────────────────────────── */
+.card {
+  background: #ffffff;
+  border: 1px solid #e6e8f2;
+  border-radius: 16px;
+}
+
+/* ── Responsive Settings ─────────────────────────────────────── */
+@media (max-width: 700px) {
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}

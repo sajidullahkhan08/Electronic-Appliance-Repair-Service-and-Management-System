@@ -11,7 +11,7 @@ async function requireAuth() {
       window.location.href = "/admin/login.html";
     } else {
       const badge = document.getElementById("admin-username");
-      if (badge) badge.textContent = json.username;
+      if (badge) badge.textContent = json.phone || 'Admin';
     }
   } catch {
     window.location.href = "/admin/login.html";
@@ -38,14 +38,14 @@ const loginForm = document.getElementById("login-form");
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const btn = loginForm.querySelector("button[type=submit]");
+    const btn   = loginForm.querySelector("button[type=submit]");
     const errEl = document.getElementById("login-error");
     btn.disabled = true;
     btn.textContent = "Logging in…";
     if (errEl) errEl.style.display = "none";
 
     const data = {
-      username: document.getElementById("username").value.trim(),
+      phone:    document.getElementById("phone").value.trim(),
       password: document.getElementById("password").value,
     };
     try {
@@ -152,12 +152,34 @@ function setEl(id, val) {
   if (el) el.textContent = val ?? "—";
 }
 
-// ── Change password ──────────────────────────────────────────
-async function changePassword(newPassword, confirmPassword) {
+// ── Change password (OTP protected) ─────────────────────────
+async function changePassword(otp, newPassword, confirmPassword) {
   const res = await fetch(`${API}/change-password`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ new_password: newPassword, confirm_password: confirmPassword }),
+    body: JSON.stringify({ otp, new_password: newPassword, confirm_password: confirmPassword }),
+    credentials: 'include',
+  });
+  return await res.json();
+}
+
+// ── Change phone number (OTP protected) ──────────────────────
+async function changePhone(otp, newPhone) {
+  const res = await fetch(`${API}/change-phone`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ otp, new_phone: newPhone }),
+    credentials: 'include',
+  });
+  return await res.json();
+}
+
+// ── Send OTP ──────────────────────────────────────────────────
+async function sendOtp(purpose) {
+  const res = await fetch(`${API}/send-otp`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ purpose }),
     credentials: 'include',
   });
   return await res.json();
@@ -174,3 +196,5 @@ window.statusBadge     = statusBadge;
 window.filterTable     = filterTable;
 window.setEl           = setEl;
 window.changePassword  = changePassword;
+window.changePhone     = changePhone;
+window.sendOtp         = sendOtp;

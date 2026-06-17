@@ -8,10 +8,10 @@
 -- Table: admins
 -- ============================================================
 CREATE TABLE IF NOT EXISTS admins (
-    admin_id    INT AUTO_INCREMENT PRIMARY KEY,
-    username    VARCHAR(50) UNIQUE NOT NULL,
+    admin_id      INT AUTO_INCREMENT PRIMARY KEY,
+    phone         VARCHAR(20) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
 -- ============================================================
@@ -47,4 +47,19 @@ CREATE TABLE IF NOT EXISTS repair_requests (
     request_date        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ============================================================
+-- Table: otp_codes
+-- Stores one-time passwords sent via SMS for 2FA actions
+-- ============================================================
+CREATE TABLE IF NOT EXISTS otp_codes (
+    otp_id     INT AUTO_INCREMENT PRIMARY KEY,
+    phone      VARCHAR(20) NOT NULL,
+    code       VARCHAR(6)  NOT NULL,
+    purpose    VARCHAR(30) NOT NULL,   -- 'change_password' or 'change_phone'
+    expires_at DATETIME    NOT NULL,
+    used       TINYINT(1)  DEFAULT 0,
+    created_at TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_otp_phone_purpose (phone, purpose)
 ) ENGINE=InnoDB;
