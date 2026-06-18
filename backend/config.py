@@ -33,11 +33,11 @@ class Config:
     # LOCAL  : XAMPP MySQL defaults (root, no password, localhost:3306)
     #          Override by adding to .env:  MYSQLHOST=localhost  etc.
     # PROD   : Railway MySQL plugin injects these vars automatically
-    MYSQL_HOST     = os.environ.get('MYSQLHOST',     'localhost')
-    MYSQL_PORT     = int(os.environ.get('MYSQLPORT', 3306))
-    MYSQL_USER     = os.environ.get('MYSQLUSER',     'root')
-    MYSQL_PASSWORD = os.environ.get('MYSQLPASSWORD', '')
-    MYSQL_DB       = os.environ.get('MYSQLDATABASE', 'electrofix_db')
+    MYSQL_HOST     = os.environ.get('MYSQL_HOST',     'localhost')
+    MYSQL_PORT     = int(os.environ.get('MYSQL_PORT', 3306))
+    MYSQL_USER     = os.environ.get('MYSQL_USER',     'root')
+    MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', '')
+    MYSQL_DB       = os.environ.get('MYSQL_DB', 'electrofix_db')
 
     # ── Session Cookies ────────────────────────────────────────────────────────
     SESSION_COOKIE_HTTPONLY = True
@@ -45,6 +45,11 @@ class Config:
     # LOCAL  : False  — no HTTPS on localhost, so Secure must be off
     # PROD   : True   — Railway serves over HTTPS, so cookies must be Secure
     SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() == 'true'
+
+    # Railway runs over HTTPS; enable secure cookies by default there.
+    if os.environ.get('RAILWAY_SERVICE_ID'):
+        SESSION_COOKIE_SECURE = True
+
 
     # ── CORS Allowed Origins ───────────────────────────────────────────────────
     # LOCAL  : localhost:5000 (Flask serves both frontend and API on same port)

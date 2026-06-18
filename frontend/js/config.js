@@ -1,19 +1,21 @@
-/* config.js — shared frontend API base configuration */
+/* config.js — Frontend API base URL
+ *
+ * Since Flask serves BOTH the frontend (HTML/CSS/JS) and the backend (API),
+ * they live on the exact same domain and port — locally and on Railway.
+ *
+ * LOCAL  : http://localhost:5000  →  API is at /api/...
+ * PROD   : https://your-app.up.railway.app  →  API is at /api/...
+ *
+ * We ALWAYS use a relative path "/api" — no hardcoded URLs needed.
+ */
 
 function getApiBaseUrl() {
-  const configured = (
-    window.ELECTROFIX_API_BASE_URL ||
-    window.__API_BASE_URL ||
-    ""
-  ).trim();
-  if (configured) return configured.replace(/\/$/, "");
-  return "/api";
+  return '/api';
 }
 
-function apiUrl(path = "") {
-  const base = getApiBaseUrl();
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return `${base}${normalizedPath}`;
+function apiUrl(path = '') {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `/api${normalizedPath}`;
 }
 
 window.getApiBaseUrl = getApiBaseUrl;

@@ -1,3 +1,7 @@
+# ============================================================
+# .gitignore — ElectroFix
+# ============================================================
+
 # --- Python ---
 __pycache__/
 *.py[cod]
@@ -7,38 +11,34 @@ __pycache__/
 *.egg-info/
 .eggs/
 *.egg
-build/
-dist/
 *.log
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Virtual environments
+# --- Virtual environments ---
 .venv/
 venv/
 env/
 
-# --- Flask / Django / general ---
+# --- Flask / SQLite ---
 *.db
 *.sqlite3
 *.sqlite
 instance/
 
-# --- Environment files ---
+# --- Environment / secrets (NEVER commit these) ---
 .env
-.env.*
+# Keep .env.example (it has no real secrets, just placeholders)
+!.env.example
 
-# --- Node / Frontend (if used) ---
+# --- Node / Frontend build artifacts ---
 node_modules/
 .npm/
-.yarn/
 .yarnrc*
 .pnpm-store/
-dist/
-build/
 
-# --- Editors / OS ---
+# --- OS / Editor ---
 .DS_Store
 Thumbs.db
 .idea/
@@ -46,7 +46,4 @@ Thumbs.db
 *.iml
 
 # --- Project specific ---
-# Ignore generated caches and compiled artifacts under backend/frontend
 backend/__pycache__/
-frontend/__pycache__/
-

@@ -1,10 +1,24 @@
 # ElectroFix — Railway Deployment Configuration
-# This file tells Railway how to build and start the backend.
+# Railway reads this file to know how to build and start the app.
 
 [build]
+# nixpacks auto-detects Python from requirements.txt
 builder = "nixpacks"
 
 [deploy]
+# Gunicorn serves Flask in production.
+# $PORT is injected by Railway automatically — do NOT hardcode a port.
 startCommand = "gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
-healthcheckPath = "/"
+
+# Railway calls this endpoint to confirm the app is alive before marking healthy
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+
+# Restart the container automatically if it crashes
 restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[deploy.release]
+# Runs BEFORE the app starts on every new deploy.
+# Creates DB tables and seeds the default admin (safe to run repeatedly — uses IF NOT EXISTS).
+command = "python release_init_db.py"
