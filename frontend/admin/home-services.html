@@ -202,7 +202,8 @@
       }
 
       function openHomeModal(id, name, tid, status) {
-        homeCurrentId = id;
+        // Ensure we store a number id (prevents PUT hitting wrong row)
+        homeCurrentId = Number(id);
         document.getElementById("home-modal-info").innerHTML =
           `<span class="td-tracking">${tid}</span> — ${name}`;
         document.getElementById("home-status-select").value = status;
@@ -215,8 +216,8 @@
         .addEventListener("click", async () => {
           const status = document.getElementById("home-status-select").value;
           const notes = document.getElementById("home-notes").value;
-          const ok = await updateStatus(homeCurrentId, status, notes);
-          if (ok) {
+          const json = await updateStatus(homeCurrentId, status, notes);
+          if (json && json.success) {
             document.getElementById("home-modal").classList.remove("show");
             await renderHome();
             window.showToast(
@@ -225,7 +226,11 @@
               "success",
             );
           } else {
-            window.showToast("Error", "Could not update status.", "error");
+            window.showToast(
+              "Error",
+              json && json.error ? json.error : "Could not update status.",
+              "error",
+            );
           }
         });
 

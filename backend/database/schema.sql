@@ -36,13 +36,7 @@ CREATE TABLE IF NOT EXISTS repair_requests (
     appliance_brand     VARCHAR(100),
     problem_description TEXT NOT NULL,
     service_type        ENUM('Home Service', 'Shop Repair') NOT NULL,
-    status              ENUM(
-                            'Pending',
-                            'Under Inspection',
-                            'Repairing',
-                            'Completed',
-                            'Ready for Pickup'
-                        ) DEFAULT 'Pending',
+    status              VARCHAR(50) NOT NULL DEFAULT 'Pending',
     notes               TEXT,
     request_date        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

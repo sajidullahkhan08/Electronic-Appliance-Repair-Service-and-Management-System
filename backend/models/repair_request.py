@@ -67,7 +67,21 @@ def get_all_requests(service_type_filter=None):
         with conn.cursor() as cur:
             if service_type_filter:
                 cur.execute("""
-                    SELECT r.*, c.name AS customer_name, c.phone
+                    SELECT
+                        r.request_id          AS request_id,
+                        r.tracking_id         AS tracking_id,
+                        r.customer_id         AS customer_id,
+                        r.appliance_type      AS appliance_type,
+                        r.appliance_brand     AS appliance_brand,
+                        r.problem_description AS problem_description,
+                        r.service_type        AS service_type,
+                        r.status              AS status,
+                        r.notes               AS notes,
+                        r.request_date        AS request_date,
+                        r.updated_at          AS updated_at,
+                        c.name                 AS customer_name,
+                        c.phone                AS phone,
+                        c.address              AS address
                     FROM repair_requests r
                     JOIN customers c ON r.customer_id = c.customer_id
                     WHERE r.service_type = %s
@@ -75,7 +89,21 @@ def get_all_requests(service_type_filter=None):
                 """, (service_type_filter,))
             else:
                 cur.execute("""
-                    SELECT r.*, c.name AS customer_name, c.phone
+                    SELECT
+                        r.request_id          AS request_id,
+                        r.tracking_id         AS tracking_id,
+                        r.customer_id         AS customer_id,
+                        r.appliance_type      AS appliance_type,
+                        r.appliance_brand     AS appliance_brand,
+                        r.problem_description AS problem_description,
+                        r.service_type        AS service_type,
+                        r.status              AS status,
+                        r.notes               AS notes,
+                        r.request_date        AS request_date,
+                        r.updated_at          AS updated_at,
+                        c.name                 AS customer_name,
+                        c.phone                AS phone,
+                        c.address              AS address
                     FROM repair_requests r
                     JOIN customers c ON r.customer_id = c.customer_id
                     ORDER BY r.request_date DESC
@@ -103,16 +131,26 @@ def get_request_by_id(request_id):
 def update_status(request_id, status, notes=None):
     conn = get_db()
     try:
+        # Normalize notes to empty string so SQL never sets NULL unintentionally
+        if notes is None:
+            notes = ''
+
         with conn.cursor() as cur:
-            cur.execute("""
+            cur.execute(
+                """
                 UPDATE repair_requests
-                SET status = %s, notes = %s
+                SET status = %s,
+                    notes = %s,
+                    updated_at = CURRENT_TIMESTAMP
                 WHERE request_id = %s
-            """, (status, notes, request_id))
+                """,
+                (status, notes, request_id),
+            )
             conn.commit()
             return cur.rowcount > 0
     finally:
         conn.close()
+
 
 
 def get_dashboard_stats():

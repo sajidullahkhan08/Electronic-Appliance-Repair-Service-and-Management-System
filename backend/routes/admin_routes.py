@@ -112,7 +112,7 @@ def update_request_status(request_id):
     if not ok:
         return jsonify({'success': False, 'error': 'Request not found.'}), 404
 
-    return jsonify({'success': True, 'message': 'Status updated.'}), 200
+    return jsonify({'success': True, 'message': 'Status updated.', 'request_id': request_id, 'status': status}), 200
 
 
 # ── Customers ─────────────────────────────────────────────────────────────────
@@ -162,8 +162,28 @@ def home_services():
             row['request_date'] = row['request_date'].strftime('%d %b %Y, %I:%M %p')
         if row.get('updated_at'):
             row['updated_at'] = row['updated_at'].strftime('%d %b %Y, %I:%M %p')
+
+        # Ensure address is always present for UI even if NULL in DB
+        if not row.get('address'):
+            row['address'] = '—'
+
+        # Normalize status if DB has NULL/empty/invalid value
+        if not row.get('status') or row.get('status') not in VALID_STATUSES:
+            row['status'] = 'Pending'
+
+        # Ensure notes field exists
+        if row.get('notes') is None:
+            row['notes'] = ''
+
+        # Important: ensure request_id and status types are consistent
+        # (UI uses request_id as number when opening modal)
+        if row.get('request_id') is None and row.get('requestID') is not None:
+            row['request_id'] = row['requestID']
+
         result.append(row)
+
     return jsonify({'success': True, 'data': result}), 200
+
 
 
 @admin_bp.route('/status-options', methods=['GET'])

@@ -128,32 +128,75 @@ ElectroFix will be a web-based platform that digitizes the complete workflow of 
 
 ### Prerequisites
 
-- Python 3.8+
-- Flask and dependencies (see `requirements.txt`)
-- Modern web browser
+- **Python 3.8+**
+- **MySQL** (recommended) or SQLite-style setup (schema is in `backend/database/schema.sql`)
+- A modern web browser
 
-### Installation
+### Setup (Local Development)
 
-1. Clone the repository
-2. Navigate to the backend directory and install dependencies:
+1. **Clone** this repository
+2. Create a backend environment:
+
+   ```bash
+   cd backend
+   python -m venv venv
+   venv\Scripts\activate
+   ```
+
+3. Install dependencies:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Initialize the database:
+4. Configure environment variables:
+   - Create `backend/.env` (or set variables directly in your system environment).
+   - At minimum, set `SECRET_KEY`.
+
+   Example (MySQL local):
+
+   ```env
+   SECRET_KEY=change-me
+   MYSQL_HOST=localhost
+   MYSQL_PORT=3306
+   MYSQL_USER=root
+   MYSQL_PASSWORD=
+   MYSQL_DB=electrofix_db
+   SESSION_COOKIE_SECURE=false
+   ```
+
+5. Initialize the database:
 
    ```bash
    python init_db.py
    ```
 
-4. Run the Flask application:
+6. Run the backend:
 
    ```bash
    python app.py
    ```
 
-5. Open your browser and navigate to the frontend directory
+7. Open the app in your browser:
+   - Customer app: `http://localhost:5000/`
+   - Admin login: `http://localhost:5000/admin/login.html`
+
+### Production / Deployment
+
+#### Railway (Recommended)
+
+- Use the `Procfile`/`Dockerfile` already provided in `backend/`.
+- Add a **MySQL** plugin on Railway.
+- Railway will inject `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DB` automatically.
+- Set at least:
+  - `SECRET_KEY`
+  - (optional) `CORS_ORIGINS` if needed
+  - (optional) Twilio variables if OTP SMS is required
+
+#### Docker (Backend)
+
+Build and run the backend container using `backend/Dockerfile`.
+(You may also serve the frontend via the backend, since `backend/app.py` serves `frontend/`.)
 
 ### Project Structure
 

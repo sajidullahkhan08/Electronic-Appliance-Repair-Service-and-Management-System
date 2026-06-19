@@ -11,7 +11,7 @@ async function requireAuth() {
       window.location.href = "/admin/login.html";
     } else {
       const badge = document.getElementById("admin-username");
-      if (badge) badge.textContent = json.phone || 'Admin';
+      if (badge) badge.textContent = json.phone || "Admin";
     }
   } catch {
     window.location.href = "/admin/login.html";
@@ -38,14 +38,14 @@ const loginForm = document.getElementById("login-form");
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const btn   = loginForm.querySelector("button[type=submit]");
+    const btn = loginForm.querySelector("button[type=submit]");
     const errEl = document.getElementById("login-error");
     btn.disabled = true;
     btn.textContent = "Logging in…";
     if (errEl) errEl.style.display = "none";
 
     const data = {
-      phone:    document.getElementById("phone").value.trim(),
+      phone: document.getElementById("phone").value.trim(),
       password: document.getElementById("password").value,
     };
     try {
@@ -116,13 +116,15 @@ async function updateStatus(requestId, status, notes = "") {
     credentials: "include",
   });
   const json = await res.json();
-  return json.success;
+  return json;
 }
 
 // ── Status badge HTML ────────────────────────────────────────
 function statusBadge(status) {
   const map = {
     Pending: "pending",
+    Scheduled: "scheduled",
+    "Technician Dispatched": "scheduled",
     "Under Inspection": "under-inspection",
     Repairing: "repairing",
     Completed: "completed",
@@ -155,10 +157,14 @@ function setEl(id, val) {
 // ── Change password (OTP protected) ─────────────────────────
 async function changePassword(otp, newPassword, confirmPassword) {
   const res = await fetch(`${API}/change-password`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ otp, new_password: newPassword, confirm_password: confirmPassword }),
-    credentials: 'include',
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      otp,
+      new_password: newPassword,
+      confirm_password: confirmPassword,
+    }),
+    credentials: "include",
   });
   return await res.json();
 }
@@ -166,10 +172,10 @@ async function changePassword(otp, newPassword, confirmPassword) {
 // ── Change phone number (OTP protected) ──────────────────────
 async function changePhone(otp, newPhone) {
   const res = await fetch(`${API}/change-phone`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ otp, new_phone: newPhone }),
-    credentials: 'include',
+    credentials: "include",
   });
   return await res.json();
 }
@@ -177,24 +183,24 @@ async function changePhone(otp, newPhone) {
 // ── Send OTP ──────────────────────────────────────────────────
 async function sendOtp(purpose) {
   const res = await fetch(`${API}/send-otp`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ purpose }),
-    credentials: 'include',
+    credentials: "include",
   });
   return await res.json();
 }
 
 // expose
-window.requireAuth     = requireAuth;
-window.doLogout        = doLogout;
-window.loadStats       = loadStats;
-window.loadRequests    = loadRequests;
-window.loadCustomers   = loadCustomers;
-window.updateStatus    = updateStatus;
-window.statusBadge     = statusBadge;
-window.filterTable     = filterTable;
-window.setEl           = setEl;
-window.changePassword  = changePassword;
-window.changePhone     = changePhone;
-window.sendOtp         = sendOtp;
+window.requireAuth = requireAuth;
+window.doLogout = doLogout;
+window.loadStats = loadStats;
+window.loadRequests = loadRequests;
+window.loadCustomers = loadCustomers;
+window.updateStatus = updateStatus;
+window.statusBadge = statusBadge;
+window.filterTable = filterTable;
+window.setEl = setEl;
+window.changePassword = changePassword;
+window.changePhone = changePhone;
+window.sendOtp = sendOtp;

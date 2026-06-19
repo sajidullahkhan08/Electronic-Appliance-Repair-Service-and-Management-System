@@ -267,8 +267,8 @@
         .addEventListener("click", async () => {
           const status = document.getElementById("modal-status-select").value;
           const notes = document.getElementById("modal-notes").value;
-          const ok = await updateStatus(currentRequestId, status, notes);
-          if (ok) {
+          const json = await updateStatus(currentRequestId, status, notes);
+          if (json && json.success) {
             document.getElementById("detail-modal").classList.remove("show");
             await renderRequests();
             window.showToast(
